@@ -161,6 +161,7 @@
                         <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
                                 <th class="border px-4 py-2 text-left">Nama Peminjam</th>
+                                <th class="border px-4 py-2 text-left">Divisi</th>
                                 <th class="border px-4 py-2 text-left">Barang</th>
                                 <th class="border px-4 py-2 text-left">Jumlah</th>
                                 <th class="border px-4 py-2 text-left">Tanggal Pinjam</th>
@@ -176,6 +177,7 @@
                                 @foreach($borrowing->details as $detail)
                                     <tr>
                                         <td class="border px-4 py-2">{{ $borrowing->borrower_name }}</td>
+                                        <td class="border px-4 py-2">{{ $borrowing->division ?? '-' }}</td>
                                         <td class="border px-4 py-2">{{ $detail->product->name ?? '-' }}</td>
                                         <td class="border px-4 py-2">{{ $detail->quantity }}</td>
                                         <td class="border px-4 py-2">{{ $borrowing->borrow_date?->format('d M Y') }}</td>
@@ -187,7 +189,7 @@
                                 @endforeach
                             @empty
                                 <tr>
-                                    <td colspan="8" class="border px-4 py-8 text-center text-gray-500">
+                                    <td colspan="9" class="border px-4 py-8 text-center text-gray-500">
                                         Belum ada data peminjaman.
                                     </td>
                                 </tr>

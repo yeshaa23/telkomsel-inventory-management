@@ -22,6 +22,7 @@ class BorrowingsExport implements FromCollection, WithHeadings, WithMapping, Wit
     {
         return [
             'Nama Peminjam',
+            'Divisi',
             'Kode Barang',
             'Nama Barang',
             'Jumlah',
@@ -38,6 +39,7 @@ class BorrowingsExport implements FromCollection, WithHeadings, WithMapping, Wit
     {
         return [
             $detail->borrowing->borrower_name ?? '-',
+            $detail->borrowing->division ?? '-',
             $detail->product->code ?? '-',
             $detail->product->name ?? '-',
             $detail->quantity,

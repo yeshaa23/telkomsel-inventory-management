@@ -11,6 +11,7 @@
                 <h3 class="text-lg font-semibold mb-2">Detail Peminjaman</h3>
 
                 <p><strong>Nama Peminjam:</strong> {{ $borrowing->borrower_name }}</p>
+                <p><strong>Divisi:</strong> {{ $borrowing->division ?? '-' }}</p>
                 <p><strong>Tanggal Pinjam:</strong> {{ $borrowing->borrow_date?->format('d M Y') }}</p>
                 <p><strong>Jatuh Tempo:</strong> {{ $borrowing->due_date?->format('d M Y') ?? '-' }}</p>
             </div>

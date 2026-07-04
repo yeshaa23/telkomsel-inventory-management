@@ -49,6 +49,7 @@
         <thead>
             <tr>
                 <th>Nama Peminjam</th>
+                <th>Divisi</th>
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
@@ -66,6 +67,7 @@
                 @foreach($borrowing->details as $detail)
                     <tr>
                         <td>{{ $borrowing->borrower_name }}</td>
+                        <td>{{ $borrowing->division ?? '-' }}</td>
                         <td>{{ $detail->product->code ?? '-' }}</td>
                         <td>{{ $detail->product->name ?? '-' }}</td>
                         <td>{{ $detail->quantity }}</td>
@@ -79,7 +81,7 @@
                 @endforeach
             @empty
                 <tr>
-                    <td colspan="10">
+                    <td colspan="11">
                         Belum ada data peminjaman.
                     </td>
                 </tr>

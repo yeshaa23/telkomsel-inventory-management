@@ -33,6 +33,7 @@ class BorrowingController extends Controller
     {
         $request->validate([
             'borrower_name' => 'required|string|max:255',
+            'division' => 'required|string|max:255',
             'borrow_date' => 'required|date',
             'due_date' => 'nullable|date|after_or_equal:borrow_date',
             'product_id' => 'required|exists:products,id',
@@ -52,6 +53,7 @@ class BorrowingController extends Controller
         DB::transaction(function () use ($request, $product) {
             $borrowing = Borrowing::create([
                 'borrower_name' => $request->borrower_name,
+                'division' => $request->division,
                 'borrow_date' => $request->borrow_date,
                 'due_date' => $request->due_date,
                 'status' => 'borrowed',

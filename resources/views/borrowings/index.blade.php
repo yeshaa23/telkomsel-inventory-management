@@ -37,6 +37,7 @@
                     <thead class="bg-gray-100 dark:bg-gray-700">
                         <tr>
                             <th class="border px-4 py-2 text-left">Nama Peminjam</th>
+                            <th class="border px-4 py-2 text-left">Divisi</th>
                             <th class="border px-4 py-2 text-left">Tanggal Pinjam</th>
                             <th class="border px-4 py-2 text-left">Jatuh Tempo</th>
                             <th class="border px-4 py-2 text-left">Tanggal Kembali</th>
@@ -49,6 +50,7 @@
                         @forelse($borrowings as $borrowing)
                             <tr>
                                 <td class="border px-4 py-2">{{ $borrowing->borrower_name }}</td>
+                                <td class="border px-4 py-2">{{ $borrowing->division ?? '-' }}</td>
                                 <td class="border px-4 py-2">{{ $borrowing->borrow_date?->format('d M Y') }}</td>
                                 <td class="border px-4 py-2">{{ $borrowing->due_date?->format('d M Y') ?? '-' }}</td>
                                 <td class="border px-4 py-2">{{ $borrowing->return_date?->format('d M Y') ?? '-' }}</td>
@@ -98,7 +100,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="border px-4 py-10 text-center text-gray-500">
+                                <td colspan="7" class="border px-4 py-10 text-center text-gray-500">
                                     <p class="font-semibold">Belum ada data peminjaman.</p>
                                     <p class="text-sm mt-1">
                                         Klik Tambah Peminjaman untuk mencatat transaksi peminjaman barang.

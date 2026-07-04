@@ -9,6 +9,7 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 bg-white dark:bg-gray-800 p-6 rounded shadow">
             <div class="mb-6 space-y-2">
                 <p><strong>Nama Peminjam:</strong> {{ $borrowing->borrower_name }}</p>
+                <p><strong>Divisi:</strong> {{ $borrowing->division ?? '-' }}</p>
                 <p><strong>Tanggal Pinjam:</strong> {{ $borrowing->borrow_date?->format('d M Y') }}</p>
                 <p><strong>Jatuh Tempo:</strong> {{ $borrowing->due_date?->format('d M Y') ?? '-' }}</p>
                 <p><strong>Tanggal Kembali:</strong> {{ $borrowing->return_date?->format('d M Y') ?? '-' }}</p>

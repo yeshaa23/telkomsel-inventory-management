@@ -25,6 +25,30 @@
                     @enderror
                 </div>
 
+                <div class="mb-4">
+                    <label class="block mb-1">Divisi</label>
+
+                    <select
+                        name="division"
+                        class="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Pilih Divisi</option>
+                        <option value="IT" {{ old('division') == 'IT' ? 'selected' : '' }}>IT</option>
+                        <option value="Finance" {{ old('division') == 'Finance' ? 'selected' : '' }}>Finance</option>
+                        <option value="Human Resources" {{ old('division') == 'Human Resources' ? 'selected' : '' }}>Human Resources</option>
+                        <option value="Marketing" {{ old('division') == 'Marketing' ? 'selected' : '' }}>Marketing</option>
+                        <option value="Sales" {{ old('division') == 'Sales' ? 'selected' : '' }}>Sales</option>
+                        <option value="Operations" {{ old('division') == 'Operations' ? 'selected' : '' }}>Operations</option>
+                        <option value="Customer Service" {{ old('division') == 'Customer Service' ? 'selected' : '' }}>Customer Service</option>
+                        <option value="General Affairs" {{ old('division') == 'General Affairs' ? 'selected' : '' }}>General Affairs</option>
+                        <option value="Lainnya" {{ old('division') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    </select>
+
+                    @error('division')
+                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block mb-1">Tanggal Pinjam</label>
