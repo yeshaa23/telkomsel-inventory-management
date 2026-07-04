@@ -8,7 +8,7 @@ class Borrowing extends Model
 {
     protected $fillable = [
         'borrower_name',
-        'divison',
+        'division',
         'borrow_date',
         'due_date',
         'return_date',
