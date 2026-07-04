@@ -1,0 +1,43 @@
+<?php
+
+use App\Models\Product;
+
+test('product status is out of stock when stock is zero', function () {
+    $product = new Product([
+        'stock' => 0,
+        'condition' => 'Baik',
+    ]);
+
+    expect($product->stock_status)->toBe('out_of_stock');
+    expect($product->stock_status_label)->toBe('Habis');
+});
+
+test('product status is low stock when stock is between one and five', function () {
+    $product = new Product([
+        'stock' => 3,
+        'condition' => 'Baik',
+    ]);
+
+    expect($product->stock_status)->toBe('low_stock');
+    expect($product->stock_status_label)->toBe('Stok Menipis');
+});
+
+test('product status is damaged when condition is not good and stock is enough', function () {
+    $product = new Product([
+        'stock' => 10,
+        'condition' => 'Rusak Ringan',
+    ]);
+
+    expect($product->stock_status)->toBe('damaged');
+    expect($product->stock_status_label)->toBe('Perlu Perhatian');
+});
+
+test('product status is available when stock is enough and condition is good', function () {
+    $product = new Product([
+        'stock' => 10,
+        'condition' => 'Baik',
+    ]);
+
+    expect($product->stock_status)->toBe('available');
+    expect($product->stock_status_label)->toBe('Tersedia');
+});

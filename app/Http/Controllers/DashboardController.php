@@ -37,13 +37,19 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
-        $monthlyBorrowings = Borrowing::select(
-                DB::raw('MONTH(borrow_date) as month'),
-                DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
+        $monthlyBorrowings = Borrowing::select('borrow_date')
+            ->get()
+            ->groupBy(function ($borrowing) {
+                return \Carbon\Carbon::parse($borrowing->borrow_date)->month;
+            })
+            ->map(function ($items, $month) {
+                return (object) [
+                    'month' => (int) $month,
+                    'total' => $items->count(),
+                ];
+            })
+            ->sortBy('month')
+            ->values();
 
         $categorySummaries = Product::select(
                 'categories.name as category_name',
