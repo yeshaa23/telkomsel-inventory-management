@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Laporan Barang</title>
+
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -14,6 +15,11 @@
             margin-bottom: 20px;
         }
 
+        .meta {
+            margin-bottom: 15px;
+            font-size: 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -23,15 +29,21 @@
             background-color: #eeeeee;
         }
 
-        th, td {
-            border: 1px solid #444;
+        th,
+        td {
+            border: 1px solid #444444;
             padding: 6px;
             text-align: left;
         }
     </style>
 </head>
+
 <body>
     <h2>Laporan Data Barang</h2>
+
+    <div class="meta">
+        Dicetak pada: {{ now()->format('d M Y H:i') }}
+    </div>
 
     <table>
         <thead>
@@ -42,8 +54,10 @@
                 <th>Stok</th>
                 <th>Lokasi Penyimpanan</th>
                 <th>Kondisi Barang</th>
+                <th>Status Stok</th>
             </tr>
         </thead>
+
         <tbody>
             @forelse($products as $product)
                 <tr>
@@ -53,10 +67,13 @@
                     <td>{{ $product->stock }}</td>
                     <td>{{ $product->location }}</td>
                     <td>{{ $product->condition }}</td>
+                    <td>{{ $product->stock_status_label }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6">Belum ada data barang.</td>
+                    <td colspan="7">
+                        Belum ada data barang.
+                    </td>
                 </tr>
             @endforelse
         </tbody>

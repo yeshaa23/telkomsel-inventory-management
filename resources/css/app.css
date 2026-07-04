@@ -9,6 +9,7 @@ html.dark body {
 html.dark .bg-white {
     background-color: #1f2937 !important;
 }
+html.dark .bg-gray-50,
 html.dark .bg-gray-100 {
     background-color: #374151 !important;
 }
@@ -19,9 +20,7 @@ html.dark .text-gray-600,
 html.dark .text-gray-500 {
     color: #f3f4f6 !important;
 }
-html.dark .border,
-html.dark .border-gray-100,
-html.dark .border-gray-200 {
+html.dark .border {
     border-color: #4b5563 !important;
 }
 html.dark input,
@@ -31,15 +30,69 @@ html.dark textarea {
     color: #f9fafb !important;
     border-color: #4b5563 !important;
 }
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: #9ca3af !important;
+}
 html.dark table {
     color: #f9fafb;
 }
 html.dark th {
     background-color: #374151 !important;
 }
-html.dark td {
-    background-color: #1f2937 !important;
-}
 html.dark .shadow {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.6), 0 1px 2px -1px rgba(0, 0, 0, 0.6) !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3) !important;
+}
+/* Layout refinement */
+body {
+    font-size: 15px;
+}
+
+main {
+    min-height: calc(100vh - 72px);
+}
+
+table {
+    font-size: 14px;
+}
+
+th,
+td {
+    vertical-align: middle;
+}
+
+input,
+select,
+textarea {
+    font-size: 14px;
+}
+
+.sidebar-link {
+    font-size: 15px;
+}
+
+/* Better dark mode contrast */
+html.dark .bg-yellow-100 {
+    background-color: #713f12 !important;
+    color: #fef3c7 !important;
+}
+
+html.dark .bg-green-100 {
+    background-color: #14532d !important;
+    color: #dcfce7 !important;
+}
+
+html.dark .bg-red-100 {
+    background-color: #7f1d1d !important;
+    color: #fee2e2 !important;
+}
+
+html.dark .bg-blue-100 {
+    background-color: #1e3a8a !important;
+    color: #dbeafe !important;
+}
+
+html.dark .bg-orange-100 {
+    background-color: #7c2d12 !important;
+    color: #ffedd5 !important;
 }

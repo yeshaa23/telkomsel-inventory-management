@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::latest()->paginate(10);
+
         return view('categories.index', compact('categories'));
     }
 
@@ -21,13 +23,25 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string',
         ]);
 
-        Category::create($request->only('name', 'description'));
+        $category = Category::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
+        ActivityLog::record(
+            'create',
+            'categories',
+            'Menambahkan kategori baru: ' . $category->name,
+            $category->toArray()
+        );
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     public function show(Category $category)
@@ -43,19 +57,48 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string',
         ]);
 
-        $category->update($request->only('name', 'description'));
+        $oldData = $category->toArray();
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui.');
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        ActivityLog::record(
+            'update',
+            'categories',
+            'Memperbarui kategori: ' . $category->name,
+            [
+                'before' => $oldData,
+                'after' => $category->fresh()->toArray(),
+            ]
+        );
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(Category $category)
     {
+        $categoryName = $category->name;
+        $categoryData = $category->toArray();
+
+        ActivityLog::record(
+            'delete',
+            'categories',
+            'Menghapus kategori: ' . $categoryName,
+            $categoryData
+        );
+
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Kategori berhasil dihapus.');
     }
 }

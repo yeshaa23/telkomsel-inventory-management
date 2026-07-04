@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Borrowing;
 use App\Models\BorrowingDetail;
 use App\Models\Product;
@@ -12,13 +13,19 @@ class BorrowingController extends Controller
 {
     public function index()
     {
-        $borrowings = Borrowing::with('details.product')->latest()->paginate(10);
+        $borrowings = Borrowing::with('details.product')
+            ->latest()
+            ->paginate(10);
+
         return view('borrowings.index', compact('borrowings'));
     }
 
     public function create()
     {
-        $products = Product::where('stock', '>', 0)->get();
+        $products = Product::where('stock', '>', 0)
+            ->orderBy('name')
+            ->get();
+
         return view('borrowings.create', compact('products'));
     }
 
@@ -27,6 +34,7 @@ class BorrowingController extends Controller
         $request->validate([
             'borrower_name' => 'required|string|max:255',
             'borrow_date' => 'required|date',
+            'due_date' => 'nullable|date|after_or_equal:borrow_date',
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
@@ -34,13 +42,18 @@ class BorrowingController extends Controller
         $product = Product::findOrFail($request->product_id);
 
         if ($product->stock < $request->quantity) {
-            return back()->withErrors(['quantity' => 'Stok barang tidak mencukupi.'])->withInput();
+            return back()
+                ->withErrors([
+                    'quantity' => 'Stok barang tidak mencukupi.',
+                ])
+                ->withInput();
         }
 
         DB::transaction(function () use ($request, $product) {
             $borrowing = Borrowing::create([
                 'borrower_name' => $request->borrower_name,
                 'borrow_date' => $request->borrow_date,
+                'due_date' => $request->due_date,
                 'status' => 'borrowed',
             ]);
 
@@ -51,41 +64,117 @@ class BorrowingController extends Controller
             ]);
 
             $product->decrement('stock', $request->quantity);
+
+            ActivityLog::record(
+                'create',
+                'borrowings',
+                'Mencatat peminjaman barang oleh: ' . $borrowing->borrower_name,
+                [
+                    'borrowing' => $borrowing->toArray(),
+                    'product' => $product->toArray(),
+                    'quantity' => $request->quantity,
+                ]
+            );
         });
 
-        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil ditambahkan.');
+        return redirect()
+            ->route('borrowings.index')
+            ->with('success', 'Peminjaman berhasil ditambahkan.');
     }
 
     public function show(Borrowing $borrowing)
     {
         $borrowing->load('details.product');
+
         return view('borrowings.show', compact('borrowing'));
     }
 
-    public function returnItem(Borrowing $borrowing)
+    public function returnForm(Borrowing $borrowing)
     {
         if ($borrowing->status === 'returned') {
-            return back()->with('error', 'Barang sudah dikembalikan.');
+            return redirect()
+                ->route('borrowings.index')
+                ->with('error', 'Barang sudah dikembalikan.');
         }
 
-        DB::transaction(function () use ($borrowing) {
+        $borrowing->load('details.product');
+
+        return view('borrowings.return', compact('borrowing'));
+    }
+
+    public function returnItem(Request $request, Borrowing $borrowing)
+    {
+        $request->validate([
+            'return_condition' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'return_note' => 'nullable|string|max:1000',
+        ]);
+
+        if ($borrowing->status === 'returned') {
+            return redirect()
+                ->route('borrowings.index')
+                ->with('error', 'Barang sudah dikembalikan.');
+        }
+
+        DB::transaction(function () use ($request, $borrowing) {
+            $borrowing->load('details.product');
+
             foreach ($borrowing->details as $detail) {
                 $detail->product->increment('stock', $detail->quantity);
+
+                if ($request->return_condition !== 'Baik') {
+                    $detail->product->update([
+                        'condition' => $request->return_condition,
+                    ]);
+                }
             }
 
             $borrowing->update([
                 'status' => 'returned',
                 'return_date' => now()->toDateString(),
+                'return_condition' => $request->return_condition,
+                'return_note' => $request->return_note,
             ]);
+
+            ActivityLog::record(
+                'return',
+                'borrowings',
+                'Mencatat pengembalian barang oleh: ' . $borrowing->borrower_name,
+                [
+                    'borrowing' => $borrowing->fresh()->toArray(),
+                    'return_condition' => $request->return_condition,
+                    'return_note' => $request->return_note,
+                ]
+            );
         });
 
-        return redirect()->route('borrowings.index')->with('success', 'Barang berhasil dikembalikan.');
+        return redirect()
+            ->route('borrowings.index')
+            ->with('success', 'Barang berhasil dikembalikan.');
     }
 
     public function destroy(Borrowing $borrowing)
     {
-        $borrowing->delete();
+        DB::transaction(function () use ($borrowing) {
+            $borrowing->load('details.product');
 
-        return redirect()->route('borrowings.index')->with('success', 'Riwayat peminjaman berhasil dihapus.');
+            if ($borrowing->status === 'borrowed') {
+                foreach ($borrowing->details as $detail) {
+                    $detail->product->increment('stock', $detail->quantity);
+                }
+            }
+
+            ActivityLog::record(
+                'delete',
+                'borrowings',
+                'Menghapus riwayat peminjaman: ' . $borrowing->borrower_name,
+                $borrowing->toArray()
+            );
+
+            $borrowing->delete();
+        });
+
+        return redirect()
+            ->route('borrowings.index')
+            ->with('success', 'Riwayat peminjaman berhasil dihapus.');
     }
 }

@@ -1,189 +1,168 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-100 leading-tight">
-                Data Barang
-            </h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Kelola data barang inventaris kantor, stok, lokasi penyimpanan, dan kondisi barang.
-            </p>
-        </div>
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-100 leading-tight">
+            Data Barang
+        </h2>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white dark:bg-gray-800 p-6 rounded shadow">
+            @if(session('success'))
+                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">
-                                Daftar Barang Inventaris
-                            </h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
-                                Data barang dapat dicari berdasarkan nama, kode, atau lokasi penyimpanan.
-                            </p>
-                        </div>
-
-                        <a href="{{ route('products.create') }}"
-                           class="inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold shadow-sm">
-                            + Tambah Barang
-                        </a>
-                    </div>
-
-                    <div class="mt-5">
-                        <form method="GET" action="{{ route('products.index') }}" class="flex flex-col md:flex-row gap-3">
-                            <input type="text"
-                                   name="search"
-                                   value="{{ $search ?? '' }}"
-                                   placeholder="Cari berdasarkan kode, nama, atau lokasi barang..."
-                                   class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:border-red-500 focus:ring-red-500">
-
-                            <button type="submit"
-                                    class="px-5 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-sm font-semibold shadow-sm">
-                                Cari
-                            </button>
-
-                            <a href="{{ route('products.index') }}"
-                               class="px-5 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-semibold shadow-sm text-center">
-                                Reset
-                            </a>
-                        </form>
-                    </div>
+            <div class="mb-6 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-semibold">Master Data Barang</h3>
+                    <p class="text-sm text-gray-500">
+                        Kelola data inventaris, stok, lokasi penyimpanan, dan kondisi barang.
+                    </p>
                 </div>
 
-                <div class="p-6">
-                    <div class="overflow-x-auto">
-                        <table class="w-full border border-gray-200 dark:border-gray-700">
-                            <thead class="bg-gray-100 dark:bg-gray-700">
-                                <tr>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Gambar
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Kode
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Nama Barang
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Kategori
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Stok
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Lokasi
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Kondisi
-                                    </th>
-                                    <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-100">
-                                        Aksi
-                                    </th>
-                                </tr>
-                            </thead>
+                <a href="{{ route('products.create') }}" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+                    Tambah Barang
+                </a>
+            </div>
 
-                            <tbody>
-                                @forelse($products as $product)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3">
-                                            @if($product->image)
-                                                <img src="{{ asset('storage/' . $product->image) }}"
-                                                     alt="{{ $product->name }}"
-                                                     class="w-14 h-14 object-cover rounded-lg border">
-                                            @else
-                                                <div class="w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-500">
-                                                    No Image
-                                                </div>
-                                            @endif
-                                        </td>
+            <form method="GET" action="{{ route('products.index') }}" class="grid grid-cols-1 md:grid-cols-6 gap-3 mb-6">
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Cari kode/nama/lokasi"
+                    class="border rounded px-3 py-2"
+                >
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm font-semibold text-gray-800 dark:text-gray-100">
-                                            {{ $product->code }}
-                                        </td>
+                <select name="category_id" class="border rounded px-3 py-2">
+                    <option value="">Semua Kategori</option>
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-200">
-                                            {{ $product->name }}
-                                        </td>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-200">
-                                            {{ $product->category->name ?? '-' }}
-                                        </td>
+                <select name="condition" class="border rounded px-3 py-2">
+                    <option value="">Semua Kondisi</option>
+                    <option value="Baik" {{ request('condition') == 'Baik' ? 'selected' : '' }}>Baik</option>
+                    <option value="Rusak Ringan" {{ request('condition') == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
+                    <option value="Rusak Berat" {{ request('condition') == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
+                </select>
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm">
-                                            @if($product->stock <= 5)
-                                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">
-                                                    {{ $product->stock }}
-                                                </span>
-                                            @else
-                                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">
-                                                    {{ $product->stock }}
-                                                </span>
-                                            @endif
-                                        </td>
+                <select name="stock_status" class="border rounded px-3 py-2">
+                    <option value="">Semua Status</option>
+                    <option value="available" {{ request('stock_status') == 'available' ? 'selected' : '' }}>Tersedia</option>
+                    <option value="low_stock" {{ request('stock_status') == 'low_stock' ? 'selected' : '' }}>Stok Menipis</option>
+                    <option value="out_of_stock" {{ request('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Habis</option>
+                    <option value="damaged" {{ request('stock_status') == 'damaged' ? 'selected' : '' }}>Rusak</option>
+                </select>
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-200">
-                                            {{ $product->location }}
-                                        </td>
+                <select name="sort" class="border rounded px-3 py-2">
+                    <option value="">Terbaru</option>
+                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama A-Z</option>
+                    <option value="stock_asc" {{ request('sort') == 'stock_asc' ? 'selected' : '' }}>Stok Terendah</option>
+                    <option value="stock_desc" {{ request('sort') == 'stock_desc' ? 'selected' : '' }}>Stok Tertinggi</option>
+                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
+                </select>
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm">
-                                            @if($product->condition === 'Baik')
-                                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">
-                                                    Baik
-                                                </span>
-                                            @elseif($product->condition === 'Rusak Ringan')
-                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-semibold">
-                                                    Rusak Ringan
-                                                </span>
-                                            @else
-                                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">
-                                                    Rusak Berat
-                                                </span>
-                                            @endif
-                                        </td>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-gray-700 text-white rounded">
+                        Filter
+                    </button>
 
-                                        <td class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm">
-                                            <div class="flex items-center justify-center gap-2">
-                                                <a href="{{ route('products.show', $product) }}"
-                                                   class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-semibold">
-                                                    Detail
-                                                </a>
-
-                                                <a href="{{ route('products.edit', $product) }}"
-                                                   class="px-3 py-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 rounded text-xs font-semibold">
-                                                    Edit
-                                                </a>
-
-                                                <form action="{{ route('products.destroy', $product) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit"
-                                                            onclick="return confirm('Yakin ingin menghapus barang ini?')"
-                                                            class="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-xs font-semibold">
-                                                        Hapus
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="border border-gray-200 dark:border-gray-700 px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                                            Belum ada data barang.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-5">
-                        {{ $products->links() }}
-                    </div>
+                    <a href="{{ route('products.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded">
+                        Reset
+                    </a>
                 </div>
+            </form>
 
+            <div class="overflow-x-auto">
+                <table class="w-full border">
+                    <thead class="bg-gray-100 dark:bg-gray-700">
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Kode</th>
+                            <th class="border px-4 py-2 text-left">Nama</th>
+                            <th class="border px-4 py-2 text-left">Kategori</th>
+                            <th class="border px-4 py-2 text-left">Stok</th>
+                            <th class="border px-4 py-2 text-left">Lokasi</th>
+                            <th class="border px-4 py-2 text-left">Kondisi</th>
+                            <th class="border px-4 py-2 text-left">Status</th>
+                            <th class="border px-4 py-2 text-left">Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse($products as $product)
+                            <tr>
+                                <td class="border px-4 py-2">{{ $product->code }}</td>
+                                <td class="border px-4 py-2">{{ $product->name }}</td>
+                                <td class="border px-4 py-2">{{ $product->category->name ?? '-' }}</td>
+                                <td class="border px-4 py-2">{{ $product->stock }}</td>
+                                <td class="border px-4 py-2">{{ $product->location }}</td>
+                                <td class="border px-4 py-2">{{ $product->condition }}</td>
+
+                                <td class="border px-4 py-2">
+                                    @if($product->stock_status === 'available')
+                                        <span class="px-2 py-1 rounded text-xs bg-green-100 text-green-700">
+                                            {{ $product->stock_status_label }}
+                                        </span>
+                                    @elseif($product->stock_status === 'low_stock')
+                                        <span class="px-2 py-1 rounded text-xs bg-yellow-100 text-yellow-700">
+                                            {{ $product->stock_status_label }}
+                                        </span>
+                                    @elseif($product->stock_status === 'out_of_stock')
+                                        <span class="px-2 py-1 rounded text-xs bg-red-100 text-red-700">
+                                            {{ $product->stock_status_label }}
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-1 rounded text-xs bg-orange-100 text-orange-700">
+                                            {{ $product->stock_status_label }}
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="border px-4 py-2">
+                                    <a href="{{ route('products.show', $product) }}" class="text-blue-600">
+                                        Detail
+                                    </a>
+                                    |
+                                    <a href="{{ route('products.edit', $product) }}" class="text-yellow-600">
+                                        Edit
+                                    </a>
+                                    |
+                                    <form id="delete-product-{{ $product->id }}" action="{{ route('products.destroy', $product) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="button"
+                                            onclick="openConfirmModal('Yakin ingin menghapus barang ini? Data yang dihapus tidak dapat dikembalikan.', 'delete-product-{{ $product->id }}')"
+                                            class="text-red-600"
+                                        >
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="border px-4 py-10 text-center text-gray-500">
+                                    <p class="font-semibold">Belum ada data barang.</p>
+                                    <p class="text-sm mt-1">
+                                        Klik tombol Tambah Barang untuk mulai mencatat inventaris.
+                                    </p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                {{ $products->links() }}
             </div>
         </div>
     </div>

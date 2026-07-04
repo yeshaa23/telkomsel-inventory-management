@@ -13,7 +13,9 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, WithT
 {
     public function collection(): Collection
     {
-        return Product::with('category')->orderBy('name')->get();
+        return Product::with('category')
+            ->orderBy('name')
+            ->get();
     }
 
     public function headings(): array
@@ -25,6 +27,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, WithT
             'Stok',
             'Lokasi Penyimpanan',
             'Kondisi Barang',
+            'Status Stok',
         ];
     }
 
@@ -37,6 +40,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, WithT
             $product->stock,
             $product->location,
             $product->condition,
+            $product->stock_status_label,
         ];
     }
 

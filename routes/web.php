@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -23,12 +24,16 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class)
         ->middleware('role:Admin,Staff');
 
-    Route::resource('borrowings', BorrowingController::class)
-        ->middleware('role:Admin,Staff');
+    Route::get('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnForm'])
+        ->middleware('role:Admin,Staff')
+        ->name('borrowings.return.form');
 
     Route::patch('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnItem'])
         ->middleware('role:Admin,Staff')
         ->name('borrowings.return');
+
+    Route::resource('borrowings', BorrowingController::class)
+        ->middleware('role:Admin,Staff');
 
     Route::get('/reports', [ReportController::class, 'index'])
         ->middleware('role:Admin,Manager')
@@ -57,6 +62,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/borrowings/csv', [ReportController::class, 'exportBorrowingsCsv'])
         ->middleware('role:Admin,Manager')
         ->name('reports.borrowings.csv');
+
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])
+        ->middleware('role:Admin')
+        ->name('activity-logs.index');
 });
 
 Route::middleware('auth')->group(function () {
@@ -70,4 +79,4 @@ Route::middleware('auth')->group(function () {
         ->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

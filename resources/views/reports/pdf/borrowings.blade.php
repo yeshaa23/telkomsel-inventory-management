@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Laporan Peminjaman</title>
+
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -14,6 +15,11 @@
             margin-bottom: 20px;
         }
 
+        .meta {
+            margin-bottom: 15px;
+            font-size: 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -23,15 +29,21 @@
             background-color: #eeeeee;
         }
 
-        th, td {
-            border: 1px solid #444;
+        th,
+        td {
+            border: 1px solid #444444;
             padding: 6px;
             text-align: left;
         }
     </style>
 </head>
+
 <body>
     <h2>Laporan Riwayat Peminjaman</h2>
+
+    <div class="meta">
+        Dicetak pada: {{ now()->format('d M Y H:i') }}
+    </div>
 
     <table>
         <thead>
@@ -41,10 +53,14 @@
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
                 <th>Tanggal Pinjam</th>
+                <th>Jatuh Tempo</th>
                 <th>Tanggal Kembali</th>
                 <th>Status</th>
+                <th>Kondisi Kembali</th>
+                <th>Catatan</th>
             </tr>
         </thead>
+
         <tbody>
             @forelse($borrowings as $borrowing)
                 @foreach($borrowing->details as $detail)
@@ -53,14 +69,19 @@
                         <td>{{ $detail->product->code ?? '-' }}</td>
                         <td>{{ $detail->product->name ?? '-' }}</td>
                         <td>{{ $detail->quantity }}</td>
-                        <td>{{ $borrowing->borrow_date }}</td>
-                        <td>{{ $borrowing->return_date ?? '-' }}</td>
-                        <td>{{ $borrowing->status === 'borrowed' ? 'Dipinjam' : 'Dikembalikan' }}</td>
+                        <td>{{ $borrowing->borrow_date?->format('Y-m-d') }}</td>
+                        <td>{{ $borrowing->due_date?->format('Y-m-d') ?? '-' }}</td>
+                        <td>{{ $borrowing->return_date?->format('Y-m-d') ?? '-' }}</td>
+                        <td>{{ $borrowing->display_status_label }}</td>
+                        <td>{{ $borrowing->return_condition ?? '-' }}</td>
+                        <td>{{ $borrowing->return_note ?? '-' }}</td>
                     </tr>
                 @endforeach
             @empty
                 <tr>
-                    <td colspan="7">Belum ada data peminjaman.</td>
+                    <td colspan="10">
+                        Belum ada data peminjaman.
+                    </td>
                 </tr>
             @endforelse
         </tbody>

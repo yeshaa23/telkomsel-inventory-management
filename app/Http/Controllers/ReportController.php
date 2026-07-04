@@ -30,7 +30,22 @@ class ReportController extends Controller
         })->sum('quantity');
 
         $lowStockProducts = Product::with('category')
-            ->where('stock', '<=', 5)
+            ->whereBetween('stock', [1, 5])
+            ->get();
+
+        $outOfStockProducts = Product::with('category')
+            ->where('stock', '<=', 0)
+            ->get();
+
+        $damagedProducts = Product::with('category')
+            ->where('condition', '!=', 'Baik')
+            ->get();
+
+        $overdueBorrowings = Borrowing::with('details.product')
+            ->where('status', 'borrowed')
+            ->whereNotNull('due_date')
+            ->whereDate('due_date', '<', now())
+            ->latest()
             ->get();
 
         return view('reports.index', compact(
@@ -40,13 +55,18 @@ class ReportController extends Controller
             'totalStock',
             'totalBorrowings',
             'totalBorrowedItems',
-            'lowStockProducts'
+            'lowStockProducts',
+            'outOfStockProducts',
+            'damagedProducts',
+            'overdueBorrowings'
         ));
     }
 
     public function exportProductsPdf()
     {
-        $products = Product::with('category')->orderBy('name')->get();
+        $products = Product::with('category')
+            ->orderBy('name')
+            ->get();
 
         $pdf = Pdf::loadView('reports.pdf.products', [
             'products' => $products,

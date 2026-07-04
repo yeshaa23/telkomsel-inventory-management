@@ -26,8 +26,11 @@ class BorrowingsExport implements FromCollection, WithHeadings, WithMapping, Wit
             'Nama Barang',
             'Jumlah',
             'Tanggal Pinjam',
+            'Tanggal Jatuh Tempo',
             'Tanggal Kembali',
             'Status',
+            'Kondisi Saat Kembali',
+            'Catatan Pengembalian',
         ];
     }
 
@@ -38,9 +41,12 @@ class BorrowingsExport implements FromCollection, WithHeadings, WithMapping, Wit
             $detail->product->code ?? '-',
             $detail->product->name ?? '-',
             $detail->quantity,
-            $detail->borrowing->borrow_date ?? '-',
-            $detail->borrowing->return_date ?? '-',
-            $detail->borrowing->status === 'borrowed' ? 'Dipinjam' : 'Dikembalikan',
+            optional($detail->borrowing->borrow_date)->format('Y-m-d') ?? '-',
+            optional($detail->borrowing->due_date)->format('Y-m-d') ?? '-',
+            optional($detail->borrowing->return_date)->format('Y-m-d') ?? '-',
+            $detail->borrowing->display_status_label ?? '-',
+            $detail->borrowing->return_condition ?? '-',
+            $detail->borrowing->return_note ?? '-',
         ];
     }
 

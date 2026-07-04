@@ -16,6 +16,11 @@ class Product extends Model
         'image',
     ];
 
+    protected $appends = [
+        'stock_status',
+        'stock_status_label',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -24,5 +29,32 @@ class Product extends Model
     public function borrowingDetails()
     {
         return $this->hasMany(BorrowingDetail::class);
+    }
+
+    public function getStockStatusAttribute(): string
+    {
+        if ($this->stock <= 0) {
+            return 'out_of_stock';
+        }
+
+        if ($this->stock <= 5) {
+            return 'low_stock';
+        }
+
+        if ($this->condition !== 'Baik') {
+            return 'damaged';
+        }
+
+        return 'available';
+    }
+
+    public function getStockStatusLabelAttribute(): string
+    {
+        return match ($this->stock_status) {
+            'out_of_stock' => 'Habis',
+            'low_stock' => 'Stok Menipis',
+            'damaged' => 'Perlu Perhatian',
+            default => 'Tersedia',
+        };
     }
 }
