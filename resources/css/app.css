@@ -15,10 +15,25 @@
     --gsm-border: #e5e7eb;
     --gsm-bg: #f6f7fb;
     --gsm-card: #ffffff;
+
+    --gsm-sidebar-open: 280px;
+    --gsm-sidebar-closed: 84px;
+    --gsm-sidebar-current: var(--gsm-sidebar-open);
+}
+
+body.gsm-sidebar-collapsed {
+    --gsm-sidebar-current: var(--gsm-sidebar-closed);
 }
 
 * {
     box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 html {
@@ -41,8 +56,14 @@ textarea {
     font-family: Figtree, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-a {
+a,
+button {
     transition: all 0.2s ease;
+}
+
+img,
+svg {
+    max-width: 100%;
 }
 
 input,
@@ -65,46 +86,90 @@ textarea:focus {
 ========================= */
 
 .gsm-shell {
+    display: block;
     min-height: 100vh;
-    display: flex;
+    width: 100%;
 }
 
 .gsm-sidebar {
-    width: 300px;
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--gsm-sidebar-current);
+    height: 100vh;
     min-height: 100vh;
-    padding: 24px;
-    background: rgba(255, 255, 255, 0.9);
+    padding: 24px 22px;
+    background: rgba(255, 255, 255, 0.92);
     border-right: 1px solid rgba(226, 232, 240, 0.9);
     backdrop-filter: blur(20px);
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 60;
+    transition: width 0.22s ease, padding 0.22s ease, transform 0.22s ease;
+}
+
+.gsm-sidebar::-webkit-scrollbar {
+    width: 0;
+}
+
+.gsm-main {
+    margin-left: var(--gsm-sidebar-current);
+    width: calc(100% - var(--gsm-sidebar-current));
+    max-width: calc(100% - var(--gsm-sidebar-current));
+    min-height: 100vh;
+    min-width: 0;
+    transition: margin-left 0.22s ease, width 0.22s ease, max-width 0.22s ease;
 }
 
 .gsm-brand-card {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 18px;
-    border-radius: 28px;
+    min-height: 86px;
+    padding: 16px;
+    border-radius: 26px;
     background:
-        linear-gradient(135deg, rgba(230, 0, 18, 0.08), rgba(255, 255, 255, 0.9)),
+        linear-gradient(135deg, rgba(230, 0, 18, 0.08), rgba(255, 255, 255, 0.92)),
         #ffffff;
     border: 1px solid rgba(230, 0, 18, 0.12);
+    overflow: hidden;
 }
 
 .gsm-logo-mark {
-    width: 48px;
-    height: 48px;
+    width: 66px;
+    height: 66px;
+    min-width: 66px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 6px;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+}
+
+.gsm-logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.gsm-logo-fallback {
+    width: 54px;
+    height: 54px;
     border-radius: 18px;
     background: linear-gradient(135deg, #ff1744, #e60012);
     color: white;
-    display: grid;
     place-items: center;
     font-size: 24px;
     font-weight: 800;
-    box-shadow: 0 18px 35px rgba(230, 0, 18, 0.28);
+}
+
+.gsm-brand-text {
+    min-width: 0;
 }
 
 .gsm-brand-card h1 {
@@ -118,40 +183,6 @@ textarea:focus {
     font-size: 13px;
     color: #64748b;
     margin-top: 4px;
-}
-
-.gsm-user-mini {
-    margin-top: 22px;
-    padding: 14px;
-    border-radius: 22px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.gsm-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 999px;
-    background: #111827;
-    color: #ffffff;
-    display: grid;
-    place-items: center;
-    font-weight: 800;
-}
-
-.gsm-user-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #111827;
-}
-
-.gsm-user-role {
-    font-size: 12px;
-    color: #64748b;
-    margin-top: 2px;
 }
 
 .gsm-nav {
@@ -178,6 +209,7 @@ textarea:focus {
     color: #475569;
     font-size: 15px;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .gsm-nav-link:hover {
@@ -195,6 +227,7 @@ textarea:focus {
 .gsm-nav-icon {
     width: 28px;
     height: 28px;
+    min-width: 28px;
     border-radius: 10px;
     background: rgba(15, 23, 42, 0.06);
     display: grid;
@@ -225,32 +258,98 @@ textarea:focus {
     line-height: 1.5;
 }
 
-.gsm-main {
-    flex: 1;
-    min-width: 0;
+body.gsm-sidebar-collapsed .gsm-sidebar {
+    padding: 22px 14px;
+}
+
+body.gsm-sidebar-collapsed .gsm-brand-card {
+    padding: 8px;
+    justify-content: center;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+body.gsm-sidebar-collapsed .gsm-logo-mark {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    padding: 5px;
+}
+
+body.gsm-sidebar-collapsed .gsm-brand-text,
+body.gsm-sidebar-collapsed .gsm-nav-title,
+body.gsm-sidebar-collapsed .gsm-nav-link > span:last-child,
+body.gsm-sidebar-collapsed .gsm-sidebar-footer {
+    display: none;
+}
+
+body.gsm-sidebar-collapsed .gsm-nav-link {
+    justify-content: center;
+    gap: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+body.gsm-sidebar-collapsed .gsm-nav-link:hover {
+    transform: none;
 }
 
 .gsm-topbar {
-    min-height: 88px;
-    padding: 22px 34px;
+    min-height: 76px;
+    padding: 12px 28px;
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(226, 232, 240, 0.85);
-    display: flex;
+    display: grid;
+    grid-template-columns: 48px minmax(220px, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    gap: 16px;
     position: sticky;
     top: 0;
-    z-index: 30;
+    z-index: 45;
 }
 
-.gsm-page-title h2,
-.gsm-page-title h1 {
-    font-size: 26px;
-    line-height: 1.2;
+.gsm-sidebar-toggle {
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #0f766e;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.gsm-sidebar-toggle span {
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    display: block;
+}
+
+.gsm-sidebar-toggle:hover {
+    background: rgba(15, 118, 110, 0.08);
+    color: var(--gsm-red);
+}
+
+.gsm-page-title {
+    min-width: 0;
+}
+
+.gsm-page-title h1,
+.gsm-page-title h2 {
+    font-size: clamp(24px, 2.3vw, 34px);
+    line-height: 1.08;
     font-weight: 800;
     color: #0f172a;
+    overflow-wrap: anywhere;
 }
 
 .gsm-eyebrow {
@@ -265,12 +364,21 @@ textarea:focus {
 .gsm-top-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+
+.gsm-top-actions form {
+    margin: 0;
 }
 
 .gsm-search {
-    height: 48px;
-    width: 250px;
+    width: min(330px, 28vw);
+    height: 44px;
+    max-width: 330px;
+    flex: 0 1 330px;
     align-items: center;
     gap: 10px;
     padding: 0 16px;
@@ -280,6 +388,28 @@ textarea:focus {
     color: #64748b;
 }
 
+.gsm-search-submit {
+    width: 18px;
+    height: 18px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #64748b;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.gsm-search-submit svg {
+    width: 17px;
+    height: 17px;
+}
+
+.gsm-search-submit:hover {
+    color: var(--gsm-red);
+}
+
 .gsm-search input {
     width: 100%;
     background: transparent !important;
@@ -287,11 +417,12 @@ textarea:focus {
     outline: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-    color: #64748b;
+    color: #0f172a;
+    cursor: text;
 }
 
 .gsm-icon-button {
-    height: 46px;
+    height: 44px;
     padding: 0 18px;
     border-radius: 999px;
     border: 1px solid #e2e8f0;
@@ -306,21 +437,37 @@ textarea:focus {
     color: var(--gsm-red);
 }
 
+.gsm-theme-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    font-size: 19px;
+    line-height: 1;
+}
+
+#theme-toggle-icon {
+    line-height: 1;
+}
+
 .gsm-profile-pill {
-    height: 46px;
+    height: 44px;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 14px 6px 6px;
+    padding: 6px 12px 6px 6px;
     border-radius: 999px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     color: #111827;
+    flex-shrink: 0;
 }
 
 .gsm-profile-pill span {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 999px;
     background: linear-gradient(135deg, #ff1744, #e60012);
     color: white;
@@ -335,13 +482,18 @@ textarea:focus {
 }
 
 .gsm-logout-button {
-    height: 46px;
-    padding: 0 20px;
+    height: 44px;
+    padding: 0 22px;
     border-radius: 999px;
     background: #111827;
     color: white;
     font-weight: 800;
     font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .gsm-logout-button:hover {
@@ -349,31 +501,17 @@ textarea:focus {
 }
 
 .gsm-content {
-    padding: 34px;
+    padding: 28px;
+    min-width: 0;
 }
 
-.gsm-mobile-nav {
-    padding: 16px;
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
+.gsm-mobile-nav,
+.gsm-sidebar .gsm-user-mini {
+    display: none !important;
 }
 
-.gsm-mobile-nav a {
-    white-space: nowrap;
-    padding: 10px 14px;
-    border-radius: 999px;
-    background: #f1f5f9;
-    color: #475569;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.gsm-mobile-nav a.active {
-    background: var(--gsm-red);
-    color: white;
+.gsm-sidebar-overlay {
+    display: none;
 }
 
 /* =========================
@@ -1069,51 +1207,93 @@ td {
 
 html.dark body {
     background:
-        radial-gradient(circle at top left, rgba(230, 0, 18, 0.12), transparent 28%),
-        linear-gradient(180deg, #020617 0%, #0f172a 100%);
+        radial-gradient(circle at 10% 0%, rgba(230, 0, 18, 0.22), transparent 26%),
+        radial-gradient(circle at 88% 12%, rgba(59, 130, 246, 0.14), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #0f172a 52%, #111827 100%);
     color: #f8fafc;
 }
 
-html.dark .gsm-sidebar,
-html.dark .gsm-topbar,
-html.dark .gsm-mobile-nav,
-html.dark .gsm-panel,
-html.dark .gsm-stat-card,
-html.dark .gsm-auth-card {
-    background: rgba(15, 23, 42, 0.88);
+html.dark .gsm-main {
+    background:
+        radial-gradient(circle at 12% 12%, rgba(230, 0, 18, 0.12), transparent 28%),
+        radial-gradient(circle at 88% 20%, rgba(59, 130, 246, 0.12), transparent 30%),
+        linear-gradient(135deg, rgba(2, 6, 23, 0.92), rgba(15, 23, 42, 0.98));
+}
+
+html.dark .gsm-sidebar {
+    background:
+        radial-gradient(circle at top left, rgba(230, 0, 18, 0.18), transparent 28%),
+        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 1));
     border-color: rgba(51, 65, 85, 0.9);
 }
 
-html.dark .gsm-brand-card,
-html.dark .gsm-user-mini,
+html.dark .gsm-topbar {
+    background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(2, 6, 23, 0.92));
+    border-color: rgba(51, 65, 85, 0.9);
+}
+
+html.dark .gsm-brand-card {
+    background:
+        linear-gradient(135deg, rgba(230, 0, 18, 0.14), rgba(15, 23, 42, 0.9));
+    border-color: rgba(230, 0, 18, 0.24);
+}
+
+html.dark body.gsm-sidebar-collapsed .gsm-brand-card {
+    background: transparent;
+    border-color: transparent;
+}
+
 html.dark .gsm-search,
 html.dark .gsm-profile-pill,
 html.dark .gsm-icon-button,
+html.dark .gsm-theme-button,
 html.dark .gsm-mini-list,
 html.dark .gsm-empty-state {
-    background: rgba(30, 41, 59, 0.9);
-    border-color: rgba(51, 65, 85, 0.9);
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(71, 85, 105, 0.9);
+    color: #f8fafc;
 }
 
-html.dark .gsm-brand-card h1,
-html.dark .gsm-page-title h2,
 html.dark .gsm-page-title h1,
+html.dark .gsm-page-title h2,
 html.dark .gsm-panel-header h3,
 html.dark .gsm-stat-card h3,
 html.dark .gsm-mini-list strong,
-html.dark .gsm-user-name {
+html.dark .gsm-modal-card h3,
+html.dark .gsm-detail-card strong,
+html.dark .gsm-helper-card h4 {
     color: #ffffff;
 }
 
 html.dark .gsm-brand-card p,
-html.dark .gsm-user-role,
-html.dark .gsm-search,
 html.dark .gsm-search input,
 html.dark .gsm-stat-card p,
 html.dark .gsm-stat-card span,
 html.dark .gsm-mini-list span,
-html.dark .gsm-empty-state {
+html.dark .gsm-empty-state,
+html.dark .gsm-modal-card p,
+html.dark .gsm-detail-card span,
+html.dark .gsm-field small,
+html.dark .gsm-preview-box p {
     color: #cbd5e1;
+}
+
+html.dark .gsm-search input {
+    background: transparent !important;
+    color: #f8fafc !important;
+}
+
+html.dark .gsm-search input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html.dark .gsm-search-submit {
+    color: #cbd5e1;
+}
+
+html.dark .gsm-search-submit:hover {
+    color: #ffffff;
 }
 
 html.dark .gsm-nav-link {
@@ -1125,12 +1305,24 @@ html.dark .gsm-nav-link:hover {
     color: #ffffff;
 }
 
-html.dark .gsm-icon-button {
-    color: #f8fafc;
+html.dark .gsm-nav-icon {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .gsm-logout-button {
     background: var(--gsm-red);
+    color: #ffffff;
+}
+
+html.dark .gsm-panel,
+html.dark .gsm-stat-card,
+html.dark .gsm-auth-card,
+html.dark .gsm-filter-card,
+html.dark .gsm-detail-card {
+    background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.78));
+    border-color: rgba(51, 65, 85, 0.92);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
 }
 
 html.dark .gsm-table thead th {
@@ -1209,16 +1401,26 @@ html.dark .gsm-modal-card {
     background: #0f172a;
 }
 
-html.dark .gsm-modal-card h3 {
-    color: #ffffff;
+html.dark .gsm-alert-card.warning {
+    background: rgba(113, 63, 18, 0.85);
+    border-color: #92400e;
+    color: #fef3c7;
 }
 
-html.dark .gsm-modal-card p {
-    color: #cbd5e1;
+html.dark .gsm-alert-card.danger {
+    background: rgba(127, 29, 29, 0.85);
+    border-color: #991b1b;
+    color: #fee2e2;
+}
+
+html.dark .gsm-alert-card.success {
+    background: #14532d;
+    border-color: #166534;
+    color: #dcfce7;
 }
 
 /* =========================
-   RESPONSIVE
+   RESPONSIVE LAYOUT
 ========================= */
 
 @media (max-width: 1280px) {
@@ -1233,19 +1435,39 @@ html.dark .gsm-modal-card p {
     .gsm-hero-visual {
         display: none;
     }
+
+    .gsm-topbar {
+        grid-template-columns: 48px minmax(180px, 1fr) auto;
+    }
+
+    .gsm-search {
+        width: 250px;
+        max-width: 250px;
+        flex-basis: 250px;
+    }
+
+    .gsm-profile-pill strong {
+        display: none;
+    }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1080px) {
     .gsm-topbar {
-        padding: 18px 20px;
-        align-items: flex-start;
-        flex-direction: column;
+        grid-template-columns: 48px minmax(0, 1fr);
     }
 
     .gsm-top-actions {
+        grid-column: 1 / -1;
         width: 100%;
+        justify-content: flex-start;
         overflow-x: auto;
         padding-bottom: 4px;
+    }
+
+    .gsm-search {
+        width: 280px;
+        max-width: 280px;
+        flex-basis: 280px;
     }
 
     .gsm-content {
@@ -1284,12 +1506,83 @@ html.dark .gsm-modal-card p {
         padding: 26px;
         border-radius: 28px;
     }
-
-    .gsm-profile-pill strong {
-        display: none;
-    }
 }
 
+@media (max-width: 767px) {
+    :root,
+    body.gsm-sidebar-collapsed {
+        --gsm-sidebar-current: 0px;
+    }
+
+    .gsm-sidebar {
+        width: 280px;
+        transform: translateX(-105%);
+        box-shadow: 26px 0 70px rgba(15, 23, 42, 0.24);
+    }
+
+    body.gsm-mobile-sidebar-open .gsm-sidebar {
+        transform: translateX(0);
+    }
+
+    body.gsm-sidebar-collapsed .gsm-brand-card {
+        justify-content: flex-start;
+        padding: 16px;
+        min-height: 86px;
+    }
+
+    body.gsm-sidebar-collapsed .gsm-brand-text,
+    body.gsm-sidebar-collapsed .gsm-nav-title,
+    body.gsm-sidebar-collapsed .gsm-nav-link > span:last-child,
+    body.gsm-sidebar-collapsed .gsm-sidebar-footer {
+        display: block;
+    }
+
+    body.gsm-sidebar-collapsed .gsm-nav-link {
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 13px 14px;
+    }
+
+    .gsm-main,
+    body.gsm-sidebar-collapsed .gsm-main {
+        margin-left: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .gsm-sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        background: rgba(15, 23, 42, 0.52);
+        backdrop-filter: blur(4px);
+    }
+
+    body.gsm-mobile-sidebar-open .gsm-sidebar-overlay {
+        display: block;
+    }
+
+    .gsm-topbar {
+        grid-template-columns: 48px minmax(0, 1fr);
+        padding: 12px 16px;
+    }
+
+    .gsm-top-actions {
+        flex-wrap: wrap;
+        overflow-x: visible;
+    }
+
+    .gsm-search {
+        width: 100%;
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .gsm-content {
+        padding: 18px;
+    }
+}
 
 /* =========================
    PRODUCTS TABLE & FILTER
@@ -1376,12 +1669,6 @@ html.dark .gsm-filter-card label {
     color: #cbd5e1;
 }
 
-html.dark .gsm-alert-card.success {
-    background: #14532d;
-    border-color: #166534;
-    color: #dcfce7;
-}
-
 html.dark .gsm-table .text-slate-900 {
     color: #ffffff !important;
 }
@@ -1406,7 +1693,6 @@ html.dark .gsm-table .text-slate-500 {
         flex-direction: column;
     }
 }
-
 
 /* =========================
    GSM FORMS
@@ -1620,7 +1906,6 @@ html.dark .gsm-preview-box p {
         width: 100%;
     }
 }
-
 
 /* =========================
    PRODUCT DETAIL

@@ -11,9 +11,13 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet">
 
         <script>
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
+            try {
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            } catch (error) {
                 document.documentElement.classList.remove('dark');
             }
         </script>
@@ -23,24 +27,22 @@
 
     <body class="font-sans antialiased text-slate-900 dark:text-white">
         <div class="gsm-shell">
-            <aside class="gsm-sidebar hidden lg:flex">
+            <aside id="app-sidebar" class="gsm-sidebar">
                 <div>
                     <div class="gsm-brand-card">
-                        <div class="gsm-logo-mark">T</div>
-                        <div>
+                        <div class="gsm-logo-mark">
+                            <img
+                                src="{{ asset('images/telkomsel-logo.png') }}"
+                                alt="Telkomsel Logo"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
+                            >
+
+                            <span class="gsm-logo-fallback" style="display: none;">T</span>
+                        </div>
+
+                        <div class="gsm-brand-text">
                             <h1>Telkomsel</h1>
                             <p>Inventory Center</p>
-                        </div>
-                    </div>
-
-                    <div class="gsm-user-mini">
-                        <div class="gsm-avatar">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
-
-                        <div>
-                            <p class="gsm-user-name">{{ auth()->user()->name }}</p>
-                            <p class="gsm-user-role">{{ auth()->user()->role->name ?? 'User' }}</p>
                         </div>
                     </div>
 
@@ -97,8 +99,22 @@
                 </div>
             </aside>
 
+            <div id="sidebar-overlay" class="gsm-sidebar-overlay"></div>
+
             <div class="gsm-main">
                 <header class="gsm-topbar">
+                    <button
+                        type="button"
+                        id="sidebar-toggle"
+                        class="gsm-sidebar-toggle"
+                        aria-label="Toggle sidebar"
+                        aria-expanded="true"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
                     <div class="gsm-page-title">
                         @isset($header)
                             {{ $header }}
@@ -108,13 +124,35 @@
                     </div>
 
                     <div class="gsm-top-actions">
-                        <div class="gsm-search hidden md:flex">
-                            <span>⌕</span>
-                            <input type="text" placeholder="Search inventory" readonly>
-                        </div>
+                        @if(auth()->user()->hasRole(['Admin', 'Staff']))
+                            <form method="GET" action="{{ route('products.index') }}" class="gsm-search hidden md:flex">
+                                <button type="submit" class="gsm-search-submit" aria-label="Search inventory">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path
+                                            d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Zm0-2a5.4 5.4 0 1 0 0-10.8 5.4 5.4 0 0 0 0 10.8Zm6.2.2 3.2 3.2-1.4 1.4-3.2-3.2 1.4-1.4Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                </button>
 
-                        <button type="button" id="theme-toggle" class="gsm-icon-button">
-                            <span id="theme-toggle-text">Dark Mode</span>
+                                <input
+                                    type="search"
+                                    name="search"
+                                    value="{{ request('search') }}"
+                                    placeholder="Search inventory"
+                                    autocomplete="off"
+                                >
+                            </form>
+                        @endif
+
+                        <button
+                            type="button"
+                            id="theme-toggle"
+                            class="gsm-icon-button gsm-theme-button"
+                            aria-label="Switch to dark mode"
+                            title="Dark Mode"
+                        >
+                            <span id="theme-toggle-icon" aria-hidden="true">☾</span>
                         </button>
 
                         <a href="{{ route('profile.edit') }}" class="gsm-profile-pill">
@@ -125,43 +163,12 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <button class="gsm-logout-button">
+                            <button type="submit" class="gsm-logout-button">
                                 Logout
                             </button>
                         </form>
                     </div>
                 </header>
-
-                <div class="gsm-mobile-nav lg:hidden">
-                    <a href="{{ route('dashboard') }}"
-                        class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        Dashboard
-                    </a>
-
-                    @if(auth()->user()->hasRole(['Admin', 'Staff']))
-                        <a href="{{ route('categories.index') }}"
-                            class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                            Kategori
-                        </a>
-
-                        <a href="{{ route('products.index') }}"
-                            class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
-                            Barang
-                        </a>
-
-                        <a href="{{ route('borrowings.index') }}"
-                            class="{{ request()->routeIs('borrowings.*') ? 'active' : '' }}">
-                            Peminjaman
-                        </a>
-                    @endif
-
-                    @if(auth()->user()->hasRole(['Admin', 'Manager']))
-                        <a href="{{ route('reports.index') }}"
-                            class="{{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                            Laporan
-                        </a>
-                    @endif
-                </div>
 
                 <main class="gsm-content">
                     {{ $slot }}
@@ -197,52 +204,128 @@
             function openConfirmModal(message, formId) {
                 selectedFormId = formId;
 
-                document.getElementById('confirm-message').textContent = message;
-                document.getElementById('confirm-modal').classList.remove('hidden');
-                document.getElementById('confirm-modal').classList.add('flex');
+                const confirmMessage = document.getElementById('confirm-message');
+                const confirmModal = document.getElementById('confirm-modal');
+
+                if (confirmMessage && confirmModal) {
+                    confirmMessage.textContent = message;
+                    confirmModal.classList.remove('hidden');
+                    confirmModal.classList.add('flex');
+                }
             }
 
             function closeConfirmModal() {
                 selectedFormId = null;
 
-                document.getElementById('confirm-modal').classList.add('hidden');
-                document.getElementById('confirm-modal').classList.remove('flex');
+                const confirmModal = document.getElementById('confirm-modal');
+
+                if (confirmModal) {
+                    confirmModal.classList.add('hidden');
+                    confirmModal.classList.remove('flex');
+                }
             }
 
             function submitConfirmForm() {
-                if (selectedFormId) {
-                    document.getElementById(selectedFormId).submit();
+                if (!selectedFormId) {
+                    return;
+                }
+
+                const form = document.getElementById(selectedFormId);
+
+                if (form) {
+                    form.submit();
                 }
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                const toggleButton = document.getElementById('theme-toggle');
-                const toggleText = document.getElementById('theme-toggle-text');
+                const body = document.body;
+                const themeToggle = document.getElementById('theme-toggle');
+                const themeIcon = document.getElementById('theme-toggle-icon');
+                const sidebarToggle = document.getElementById('sidebar-toggle');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-                function updateThemeText() {
-                    if (!toggleText) {
+                function isMobileView() {
+                    return window.innerWidth < 768;
+                }
+
+                function isDarkMode() {
+                    return document.documentElement.classList.contains('dark');
+                }
+
+                function updateThemeButton() {
+                    const dark = isDarkMode();
+
+                    if (themeIcon) {
+                        themeIcon.textContent = dark ? '☀' : '☾';
+                    }
+
+                    if (themeToggle) {
+                        themeToggle.setAttribute('title', dark ? 'Light Mode' : 'Dark Mode');
+                        themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+                    }
+                }
+
+                function updateSidebarButton() {
+                    if (!sidebarToggle) {
                         return;
                     }
 
-                    toggleText.textContent = document.documentElement.classList.contains('dark')
-                        ? 'Light Mode'
-                        : 'Dark Mode';
+                    const expanded = isMobileView()
+                        ? body.classList.contains('gsm-mobile-sidebar-open')
+                        : !body.classList.contains('gsm-sidebar-collapsed');
+
+                    sidebarToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
                 }
 
-                updateThemeText();
+                updateThemeButton();
 
-                if (toggleButton) {
-                    toggleButton.addEventListener('click', function () {
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', function () {
                         document.documentElement.classList.toggle('dark');
 
-                        localStorage.setItem(
-                            'theme',
-                            document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-                        );
+                        localStorage.setItem('theme', isDarkMode() ? 'dark' : 'light');
 
-                        updateThemeText();
+                        updateThemeButton();
                     });
                 }
+
+                if (localStorage.getItem('sidebar') === 'collapsed' && !isMobileView()) {
+                    body.classList.add('gsm-sidebar-collapsed');
+                }
+
+                updateSidebarButton();
+
+                if (sidebarToggle) {
+                    sidebarToggle.addEventListener('click', function () {
+                        if (isMobileView()) {
+                            body.classList.toggle('gsm-mobile-sidebar-open');
+                        } else {
+                            body.classList.toggle('gsm-sidebar-collapsed');
+
+                            localStorage.setItem(
+                                'sidebar',
+                                body.classList.contains('gsm-sidebar-collapsed') ? 'collapsed' : 'expanded'
+                            );
+                        }
+
+                        updateSidebarButton();
+                    });
+                }
+
+                if (sidebarOverlay) {
+                    sidebarOverlay.addEventListener('click', function () {
+                        body.classList.remove('gsm-mobile-sidebar-open');
+                        updateSidebarButton();
+                    });
+                }
+
+                window.addEventListener('resize', function () {
+                    if (!isMobileView()) {
+                        body.classList.remove('gsm-mobile-sidebar-open');
+                    }
+
+                    updateSidebarButton();
+                });
             });
         </script>
     </body>
