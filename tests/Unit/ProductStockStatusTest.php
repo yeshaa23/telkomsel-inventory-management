@@ -2,6 +2,8 @@
 
 use App\Models\Product;
 
+uses(Tests\TestCase::class);
+
 test('product status is out of stock when stock is zero', function () {
     $product = new Product([
         'stock' => 0,
@@ -22,7 +24,7 @@ test('product status is low stock when stock is between one and five', function 
     expect($product->stock_status_label)->toBe('Stok Menipis');
 });
 
-test('product status is damaged when condition is not good and stock is enough', function () {
+test('product status is damaged when stock is enough but condition is not good', function () {
     $product = new Product([
         'stock' => 10,
         'condition' => 'Rusak Ringan',
