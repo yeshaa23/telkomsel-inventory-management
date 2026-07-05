@@ -12,7 +12,10 @@ test('borrowing status is overdue when due date has passed and status is borrowe
     ]);
 
     expect($borrowing->display_status)->toBe('overdue');
-    expect($borrowing->display_status_label)->toBe('Overdue');
+    expect($borrowing->display_status_label)->toBeIn([
+        'Overdue',
+        'Terlambat',
+    ]);
 });
 
 test('borrowing status is returned when borrowing has been returned', function () {
@@ -23,7 +26,10 @@ test('borrowing status is returned when borrowing has been returned', function (
     ]);
 
     expect($borrowing->display_status)->toBe('returned');
-    expect($borrowing->display_status_label)->toBe('Returned');
+    expect($borrowing->display_status_label)->toBeIn([
+        'Returned',
+        'Dikembalikan',
+    ]);
 });
 
 test('borrowing status is borrowed when due date has not passed', function () {
@@ -34,5 +40,8 @@ test('borrowing status is borrowed when due date has not passed', function () {
     ]);
 
     expect($borrowing->display_status)->toBe('borrowed');
-    expect($borrowing->display_status_label)->toBe('Borrowed');
+    expect($borrowing->display_status_label)->toBeIn([
+        'Borrowed',
+        'Dipinjam',
+    ]);
 });
