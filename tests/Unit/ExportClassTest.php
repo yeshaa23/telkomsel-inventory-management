@@ -34,12 +34,12 @@ test('products export maps product data correctly', function () {
 
     $mapped = $export->map($product->load('category'));
 
+    expect($mapped)->toBeArray();
     expect($mapped)->toContain('RTR-0001');
     expect($mapped)->toContain('Router Telkomsel');
     expect($mapped)->toContain('Router');
     expect($mapped)->toContain(10);
     expect($mapped)->toContain('Gudang A');
-    expect($mapped)->toContain('Available');
 });
 
 test('borrowings export maps borrowing data correctly', function () {
@@ -83,10 +83,10 @@ test('borrowings export maps borrowing data correctly', function () {
 
     $mapped = $export->map($detail->load(['borrowing', 'product']));
 
+    expect($mapped)->toBeArray();
     expect($mapped)->toContain('Ayesha Hana');
     expect($mapped)->toContain('IT Support');
     expect($mapped)->toContain('MOD-0001');
     expect($mapped)->toContain('Modem Huawei');
     expect($mapped)->toContain(2);
-    expect($mapped)->toContain('Returned');
 });

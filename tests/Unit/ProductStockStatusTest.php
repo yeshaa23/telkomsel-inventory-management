@@ -11,7 +11,7 @@ test('product status is out of stock when stock is zero', function () {
     ]);
 
     expect($product->stock_status)->toBe('out_of_stock');
-    expect($product->stock_status_label)->toBe('Habis');
+    expect($product->stock_status_label)->toBe('Out of Stock');
 });
 
 test('product status is low stock when stock is between one and five', function () {
@@ -21,7 +21,7 @@ test('product status is low stock when stock is between one and five', function 
     ]);
 
     expect($product->stock_status)->toBe('low_stock');
-    expect($product->stock_status_label)->toBe('Stok Menipis');
+    expect($product->stock_status_label)->toBe('Low Stock');
 });
 
 test('product status is damaged when stock is enough but condition is not good', function () {
@@ -31,7 +31,7 @@ test('product status is damaged when stock is enough but condition is not good',
     ]);
 
     expect($product->stock_status)->toBe('damaged');
-    expect($product->stock_status_label)->toBe('Perlu Perhatian');
+    expect($product->stock_status_label)->toBe('Needs Attention');
 });
 
 test('product status is available when stock is enough and condition is good', function () {
@@ -41,5 +41,5 @@ test('product status is available when stock is enough and condition is good', f
     ]);
 
     expect($product->stock_status)->toBe('available');
-    expect($product->stock_status_label)->toBe('Tersedia');
+    expect($product->stock_status_label)->toBe('Available');
 });
