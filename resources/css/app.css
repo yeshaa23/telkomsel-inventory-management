@@ -138,23 +138,26 @@ textarea:focus {
 }
 
 .gsm-logo-mark {
-    width: 66px;
-    height: 66px;
-    min-width: 66px;
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
     border-radius: 0;
     background: transparent;
     box-shadow: none;
-    padding: 6px;
-    display: grid;
-    place-items: center;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: visible;
 }
 
 .gsm-logo-mark img {
-    width: 100%;
-    height: 100%;
+    width: 58px;
+    height: 58px;
     object-fit: contain;
+    object-position: center;
     display: block;
+    transform: translateX(4px);
 }
 
 .gsm-logo-fallback {
@@ -274,7 +277,13 @@ body.gsm-sidebar-collapsed .gsm-logo-mark {
     width: 56px;
     height: 56px;
     min-width: 56px;
-    padding: 5px;
+    padding: 0;
+}
+
+body.gsm-sidebar-collapsed .gsm-logo-mark img {
+    width: 50px;
+    height: 50px;
+    transform: translateX(0);
 }
 
 body.gsm-sidebar-collapsed .gsm-brand-text,
