@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="">
+<html lang="{{ app()->getLocale() }}" class="">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Telkomsel Inventory') }}</title>
+        <title>{{ __('app.app_name') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet">
@@ -37,65 +37,86 @@
                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
                             >
 
-                            <span class="gsm-logo-fallback" style="display: none;">T</span>
+                            <span class="gsm-logo-fallback" style="display: none;">
+                                T
+                            </span>
                         </div>
 
                         <div class="gsm-brand-text">
                             <h1>Telkomsel</h1>
-                            <p>Inventory Center</p>
+                            <p>{{ __('app.inventory_center') }}</p>
                         </div>
                     </div>
 
                     <nav class="gsm-nav">
-                        <p class="gsm-nav-title">Menu Utama</p>
+                        <p class="gsm-nav-title">
+                            {{ __('app.main_menu') }}
+                        </p>
 
-                        <a href="{{ route('dashboard') }}"
-                            class="gsm-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="gsm-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                        >
                             <span class="gsm-nav-icon">⌂</span>
-                            <span>Dashboard</span>
+                            <span>{{ __('app.dashboard') }}</span>
                         </a>
 
                         @if(auth()->user()->hasRole(['Admin', 'Staff']))
-                            <a href="{{ route('categories.index') }}"
-                                class="gsm-nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                            <a
+                                href="{{ route('categories.index') }}"
+                                class="gsm-nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}"
+                            >
                                 <span class="gsm-nav-icon">▦</span>
-                                <span>Kategori</span>
+                                <span>{{ __('app.categories') }}</span>
                             </a>
 
-                            <a href="{{ route('products.index') }}"
-                                class="gsm-nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                            <a
+                                href="{{ route('products.index') }}"
+                                class="gsm-nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}"
+                            >
                                 <span class="gsm-nav-icon">◈</span>
-                                <span>Barang</span>
+                                <span>{{ __('app.products') }}</span>
                             </a>
 
-                            <a href="{{ route('borrowings.index') }}"
-                                class="gsm-nav-link {{ request()->routeIs('borrowings.*') ? 'active' : '' }}">
+                            <a
+                                href="{{ route('borrowings.index') }}"
+                                class="gsm-nav-link {{ request()->routeIs('borrowings.*') ? 'active' : '' }}"
+                            >
                                 <span class="gsm-nav-icon">↔</span>
-                                <span>Peminjaman</span>
+                                <span>{{ __('app.borrowings') }}</span>
                             </a>
                         @endif
 
                         @if(auth()->user()->hasRole(['Admin', 'Manager']))
-                            <a href="{{ route('reports.index') }}"
-                                class="gsm-nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                            <a
+                                href="{{ route('reports.index') }}"
+                                class="gsm-nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}"
+                            >
                                 <span class="gsm-nav-icon">▤</span>
-                                <span>Laporan</span>
+                                <span>{{ __('app.reports') }}</span>
                             </a>
                         @endif
 
                         @if(auth()->user()->hasRole('Admin'))
-                            <a href="{{ route('activity-logs.index') }}"
-                                class="gsm-nav-link {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
+                            <a
+                                href="{{ route('activity-logs.index') }}"
+                                class="gsm-nav-link {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}"
+                            >
                                 <span class="gsm-nav-icon">◎</span>
-                                <span>Riwayat Aktivitas</span>
+                                <span>{{ __('app.activity_logs') }}</span>
                             </a>
                         @endif
                     </nav>
                 </div>
 
                 <div class="gsm-sidebar-footer">
-                    <p class="font-semibold">Inventory Monitoring</p>
-                    <span>Kelola aset kantor secara cepat, rapi, dan terkontrol.</span>
+                    <p class="font-semibold">
+                        {{ __('app.inventory_monitoring') }}
+                    </p>
+
+                    <span>
+                        {{ __('app.inventory_monitoring_desc') }}
+                    </span>
                 </div>
             </aside>
 
@@ -119,54 +140,93 @@
                         @isset($header)
                             {{ $header }}
                         @else
-                            <h2>Dashboard</h2>
+                            <h2>{{ __('app.dashboard') }}</h2>
                         @endisset
                     </div>
 
                     <div class="gsm-top-actions">
-                        @if(auth()->user()->hasRole(['Admin', 'Staff']))
-                            <form method="GET" action="{{ route('products.index') }}" class="gsm-search hidden md:flex">
-                                <button type="submit" class="gsm-search-submit" aria-label="Search inventory">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                        <path
-                                            d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Zm0-2a5.4 5.4 0 1 0 0-10.8 5.4 5.4 0 0 0 0 10.8Zm6.2.2 3.2 3.2-1.4 1.4-3.2-3.2 1.4-1.4Z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                </button>
+                        @php
+                            $user = auth()->user();
 
-                                <input
-                                    type="search"
-                                    name="search"
-                                    value="{{ request('search') }}"
-                                    placeholder="Search inventory"
-                                    autocomplete="off"
-                                >
-                            </form>
-                        @endif
+                            $avatarUrl = $user->profile_photo_url ?? null;
 
-                        <button
-                            type="button"
-                            id="theme-toggle"
-                            class="gsm-icon-button gsm-theme-button"
-                            aria-label="Switch to dark mode"
-                            title="Dark Mode"
-                        >
-                            <span id="theme-toggle-icon" aria-hidden="true">☾</span>
-                        </button>
+                            if (!$avatarUrl && !empty($user->profile_photo_path)) {
+                                $avatarUrl = \Illuminate\Support\Facades\Storage::url($user->profile_photo_path);
+                            }
 
-                        <a href="{{ route('profile.edit') }}" class="gsm-profile-pill">
-                            <span>{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
-                            <strong>{{ auth()->user()->name }}</strong>
-                        </a>
+                            $initial = strtoupper(substr($user->name, 0, 1));
+                        @endphp
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                        <div class="gsm-profile-menu">
+                            <button
+                                type="button"
+                                id="profile-menu-button"
+                                class="gsm-profile-menu-button"
+                                aria-label="Open user menu"
+                                aria-expanded="false"
+                            >
+                                @if($avatarUrl)
+                                    <img
+                                        src="{{ $avatarUrl }}"
+                                        alt="{{ $user->name }}"
+                                        onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');"
+                                    >
 
-                            <button type="submit" class="gsm-logout-button">
-                                Logout
+                                    <span class="gsm-profile-initial hidden">
+                                        {{ $initial }}
+                                    </span>
+                                @else
+                                    <span class="gsm-profile-initial">
+                                        {{ $initial }}
+                                    </span>
+                                @endif
                             </button>
-                        </form>
+
+                            <div id="profile-menu-dropdown" class="gsm-profile-dropdown hidden">
+                                <div class="gsm-profile-dropdown-header">
+                                    @if($avatarUrl)
+                                        <img
+                                            src="{{ $avatarUrl }}"
+                                            alt="{{ $user->name }}"
+                                            onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');"
+                                        >
+
+                                        <span class="gsm-profile-initial hidden">
+                                            {{ $initial }}
+                                        </span>
+                                    @else
+                                        <span class="gsm-profile-initial">
+                                            {{ $initial }}
+                                        </span>
+                                    @endif
+
+                                    <div>
+                                        <strong>{{ $user->name }}</strong>
+                                        <small>{{ $user->email }}</small>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href="{{ route('profile.edit') }}"
+                                    class="gsm-profile-dropdown-item"
+                                >
+                                    <span>☻</span>
+                                    {{ __('app.profile') }}
+                                </a>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <button
+                                        type="submit"
+                                        class="gsm-profile-dropdown-item danger"
+                                    >
+                                        <span>↪</span>
+                                        {{ __('app.logout') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
@@ -176,23 +236,38 @@
             </div>
         </div>
 
-        <div id="confirm-modal" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm items-center justify-center z-50 px-4">
+        <div
+            id="confirm-modal"
+            class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm items-center justify-center z-50 px-4"
+        >
             <div class="gsm-modal-card">
-                <div class="gsm-modal-icon">!</div>
+                <div class="gsm-modal-icon">
+                    !
+                </div>
 
-                <h3>Konfirmasi Aksi</h3>
+                <h3>
+                    {{ __('app.confirm_action') }}
+                </h3>
 
                 <p id="confirm-message">
-                    Apakah Anda yakin?
+                    {{ __('app.confirm_default_message') }}
                 </p>
 
                 <div class="flex justify-end gap-2 mt-6">
-                    <button type="button" onclick="closeConfirmModal()" class="gsm-button-secondary">
-                        Batal
+                    <button
+                        type="button"
+                        onclick="closeConfirmModal()"
+                        class="gsm-button-secondary"
+                    >
+                        {{ __('app.cancel') }}
                     </button>
 
-                    <button type="button" onclick="submitConfirmForm()" class="gsm-button-danger">
-                        Ya, Lanjutkan
+                    <button
+                        type="button"
+                        onclick="submitConfirmForm()"
+                        class="gsm-button-danger"
+                    >
+                        {{ __('app.yes_continue') }}
                     </button>
                 </div>
             </div>
@@ -208,7 +283,7 @@
                 const confirmModal = document.getElementById('confirm-modal');
 
                 if (confirmMessage && confirmModal) {
-                    confirmMessage.textContent = message;
+                    confirmMessage.textContent = message || @json(__('app.confirm_default_message'));
                     confirmModal.classList.remove('hidden');
                     confirmModal.classList.add('flex');
                 }
@@ -239,10 +314,19 @@
 
             document.addEventListener('DOMContentLoaded', function () {
                 const body = document.body;
+
                 const themeToggle = document.getElementById('theme-toggle');
                 const themeIcon = document.getElementById('theme-toggle-icon');
+                const themeLabel = document.getElementById('theme-toggle-label');
+
                 const sidebarToggle = document.getElementById('sidebar-toggle');
                 const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+                const profileMenuButton = document.getElementById('profile-menu-button');
+                const profileMenuDropdown = document.getElementById('profile-menu-dropdown');
+
+                const darkModeText = @json(__('app.dark_mode'));
+                const lightModeText = @json(__('app.light_mode'));
 
                 function isMobileView() {
                     return window.innerWidth < 768;
@@ -259,9 +343,20 @@
                         themeIcon.textContent = dark ? '☀' : '☾';
                     }
 
+                    if (themeLabel) {
+                        themeLabel.textContent = dark ? lightModeText : darkModeText;
+                    }
+
                     if (themeToggle) {
-                        themeToggle.setAttribute('title', dark ? 'Light Mode' : 'Dark Mode');
-                        themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+                        themeToggle.setAttribute(
+                            'title',
+                            dark ? lightModeText : darkModeText
+                        );
+
+                        themeToggle.setAttribute(
+                            'aria-label',
+                            dark ? 'Switch to light mode' : 'Switch to dark mode'
+                        );
                     }
                 }
 
@@ -277,13 +372,25 @@
                     sidebarToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
                 }
 
+                function closeProfileMenu() {
+                    if (!profileMenuButton || !profileMenuDropdown) {
+                        return;
+                    }
+
+                    profileMenuDropdown.classList.add('hidden');
+                    profileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+
                 updateThemeButton();
 
                 if (themeToggle) {
                     themeToggle.addEventListener('click', function () {
                         document.documentElement.classList.toggle('dark');
 
-                        localStorage.setItem('theme', isDarkMode() ? 'dark' : 'light');
+                        localStorage.setItem(
+                            'theme',
+                            isDarkMode() ? 'dark' : 'light'
+                        );
 
                         updateThemeButton();
                     });
@@ -304,7 +411,9 @@
 
                             localStorage.setItem(
                                 'sidebar',
-                                body.classList.contains('gsm-sidebar-collapsed') ? 'collapsed' : 'expanded'
+                                body.classList.contains('gsm-sidebar-collapsed')
+                                    ? 'collapsed'
+                                    : 'expanded'
                             );
                         }
 
@@ -316,6 +425,33 @@
                     sidebarOverlay.addEventListener('click', function () {
                         body.classList.remove('gsm-mobile-sidebar-open');
                         updateSidebarButton();
+                    });
+                }
+
+                if (profileMenuButton && profileMenuDropdown) {
+                    profileMenuButton.addEventListener('click', function (event) {
+                        event.stopPropagation();
+
+                        const isOpen = !profileMenuDropdown.classList.contains('hidden');
+
+                        profileMenuDropdown.classList.toggle('hidden', isOpen);
+
+                        profileMenuButton.setAttribute(
+                            'aria-expanded',
+                            isOpen ? 'false' : 'true'
+                        );
+                    });
+
+                    profileMenuDropdown.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                    });
+
+                    document.addEventListener('click', closeProfileMenu);
+
+                    document.addEventListener('keydown', function (event) {
+                        if (event.key === 'Escape') {
+                            closeProfileMenu();
+                        }
                     });
                 }
 

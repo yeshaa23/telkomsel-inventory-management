@@ -42,8 +42,10 @@ html {
 
 body {
     background:
-        radial-gradient(circle at top left, rgba(230, 0, 18, 0.08), transparent 30%),
-        linear-gradient(180deg, #ffffff 0%, #f6f7fb 45%, #f8fafc 100%);
+        radial-gradient(circle at 12% 6%, rgba(230, 0, 18, 0.18), transparent 28%),
+        radial-gradient(circle at 92% 18%, rgba(230, 0, 18, 0.10), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(230, 0, 18, 0.08), transparent 36%),
+        linear-gradient(135deg, #fff5f6 0%, #ffffff 38%, #f8fafc 72%, #fff1f2 100%);
     color: #111827;
     font-size: 15px;
 }
@@ -81,32 +83,38 @@ textarea:focus {
     box-shadow: 0 0 0 3px rgba(230, 0, 18, 0.12) !important;
 }
 
+.hidden,
+.gsm-nested-field.hidden,
+#location_other_wrapper.hidden {
+    display: none !important;
+}
+
 /* =========================
    MAIN APP LAYOUT
 ========================= */
 
 .gsm-shell {
     display: block;
-    min-height: 100vh;
     width: 100%;
+    min-height: 100vh;
 }
 
 .gsm-sidebar {
     position: fixed;
     inset: 0 auto 0 0;
+    z-index: 60;
     width: var(--gsm-sidebar-current);
     height: 100vh;
     min-height: 100vh;
     padding: 24px 22px;
-    background: rgba(255, 255, 255, 0.92);
-    border-right: 1px solid rgba(226, 232, 240, 0.9);
-    backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 60;
+    background: rgba(255, 255, 255, 0.92);
+    border-right: 1px solid rgba(226, 232, 240, 0.9);
+    backdrop-filter: blur(20px);
     transition: width 0.22s ease, padding 0.22s ease, transform 0.22s ease;
 }
 
@@ -115,36 +123,40 @@ textarea:focus {
 }
 
 .gsm-main {
+    min-width: 0;
+    min-height: 100vh;
     margin-left: var(--gsm-sidebar-current);
     width: calc(100% - var(--gsm-sidebar-current));
     max-width: calc(100% - var(--gsm-sidebar-current));
-    min-height: 100vh;
-    min-width: 0;
+    background:
+        radial-gradient(circle at 14% 8%, rgba(230, 0, 18, 0.12), transparent 26%),
+        radial-gradient(circle at 88% 16%, rgba(230, 0, 18, 0.08), transparent 30%),
+        linear-gradient(135deg, rgba(255, 245, 246, 0.9), rgba(248, 250, 252, 0.96));
     transition: margin-left 0.22s ease, width 0.22s ease, max-width 0.22s ease;
 }
 
 .gsm-brand-card {
+    min-height: 86px;
+    padding: 16px;
     display: flex;
     align-items: center;
     gap: 14px;
-    min-height: 86px;
-    padding: 16px;
+    overflow: hidden;
     border-radius: 26px;
     background:
         linear-gradient(135deg, rgba(230, 0, 18, 0.08), rgba(255, 255, 255, 0.92)),
         #ffffff;
     border: 1px solid rgba(230, 0, 18, 0.12);
-    overflow: hidden;
 }
 
 .gsm-logo-mark {
     width: 64px;
     height: 64px;
     min-width: 64px;
+    padding: 0;
     border-radius: 0;
     background: transparent;
     box-shadow: none;
-    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -183,9 +195,9 @@ textarea:focus {
 }
 
 .gsm-brand-card p {
+    margin-top: 4px;
     font-size: 13px;
     color: #64748b;
-    margin-top: 4px;
 }
 
 .gsm-nav {
@@ -194,12 +206,12 @@ textarea:focus {
 
 .gsm-nav-title {
     padding: 0 14px;
+    margin-bottom: 10px;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: #94a3b8;
     font-weight: 800;
-    margin-bottom: 10px;
 }
 
 .gsm-nav-link {
@@ -261,13 +273,14 @@ textarea:focus {
     line-height: 1.5;
 }
 
+/* Sidebar collapsed */
 body.gsm-sidebar-collapsed .gsm-sidebar {
     padding: 22px 14px;
 }
 
 body.gsm-sidebar-collapsed .gsm-brand-card {
-    padding: 8px;
     justify-content: center;
+    padding: 8px;
     background: transparent;
     border-color: transparent;
     box-shadow: none;
@@ -277,7 +290,6 @@ body.gsm-sidebar-collapsed .gsm-logo-mark {
     width: 56px;
     height: 56px;
     min-width: 56px;
-    padding: 0;
 }
 
 body.gsm-sidebar-collapsed .gsm-logo-mark img {
@@ -304,26 +316,27 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
     transform: none;
 }
 
+/* Topbar */
 .gsm-topbar {
-    min-height: 76px;
-    padding: 12px 28px;
+    min-height: 68px;
+    padding: 10px 24px;
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(226, 232, 240, 0.85);
     display: grid;
-    grid-template-columns: 48px minmax(220px, 1fr) auto;
+    grid-template-columns: 42px minmax(220px, 1fr) auto;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     position: sticky;
     top: 0;
     z-index: 45;
 }
 
 .gsm-sidebar-toggle {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border: 0;
-    border-radius: 12px;
+    border-radius: 10px;
     background: transparent;
     color: #0f766e;
     display: inline-flex;
@@ -336,7 +349,7 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-sidebar-toggle span {
-    width: 20px;
+    width: 18px;
     height: 2px;
     border-radius: 999px;
     background: currentColor;
@@ -354,7 +367,7 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 
 .gsm-page-title h1,
 .gsm-page-title h2 {
-    font-size: clamp(24px, 2.3vw, 34px);
+    font-size: clamp(22px, 2vw, 30px);
     line-height: 1.08;
     font-weight: 800;
     color: #0f172a;
@@ -362,19 +375,19 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-eyebrow {
+    margin-bottom: 4px;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.16em;
     font-weight: 800;
     color: var(--gsm-red);
-    margin-bottom: 4px;
 }
 
 .gsm-top-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 9px;
     flex-wrap: nowrap;
     min-width: 0;
 }
@@ -384,13 +397,13 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-search {
-    width: min(330px, 28vw);
-    height: 44px;
-    max-width: 330px;
-    flex: 0 1 330px;
+    width: min(300px, 26vw);
+    height: 40px;
+    max-width: 300px;
+    flex: 0 1 300px;
     align-items: center;
     gap: 10px;
-    padding: 0 16px;
+    padding: 0 14px;
     border-radius: 999px;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
@@ -431,14 +444,14 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-icon-button {
-    height: 44px;
-    padding: 0 18px;
+    height: 40px;
+    padding: 0 16px;
     border-radius: 999px;
     border: 1px solid #e2e8f0;
     background: white;
     color: #334155;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .gsm-icon-button:hover {
@@ -447,13 +460,13 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-theme-button {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
     padding: 0;
     display: grid;
     place-items: center;
-    font-size: 19px;
+    font-size: 17px;
     line-height: 1;
 }
 
@@ -462,11 +475,11 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-profile-pill {
-    height: 44px;
+    height: 40px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 12px 6px 6px;
+    gap: 8px;
+    padding: 5px 10px 5px 5px;
     border-radius: 999px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -475,29 +488,29 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-profile-pill span {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 999px;
     background: linear-gradient(135deg, #ff1744, #e60012);
     color: white;
     display: grid;
     place-items: center;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
 }
 
 .gsm-profile-pill strong {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .gsm-logout-button {
-    height: 44px;
-    padding: 0 22px;
+    height: 40px;
+    padding: 0 18px;
     border-radius: 999px;
     background: #111827;
     color: white;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -605,10 +618,10 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-hero-actions {
-    margin-top: 28px;
+    margin-top: 24px;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
 }
 
 .gsm-button-primary,
@@ -618,11 +631,11 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 46px;
-    padding: 0 20px;
+    min-height: 40px;
+    padding: 0 18px;
     border-radius: 999px;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .gsm-button-primary {
@@ -757,6 +770,12 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
     color: #9f1239;
 }
 
+.gsm-alert-card.success {
+    background: #dcfce7;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
 .gsm-alert-icon {
     width: 42px;
     height: 42px;
@@ -873,6 +892,7 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 .gsm-panel-header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     gap: 16px;
     margin-bottom: 20px;
 }
@@ -881,6 +901,10 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
     font-size: 20px;
     font-weight: 800;
     color: #0f172a;
+}
+
+.gsm-panel-header .gsm-button-secondary {
+    flex-shrink: 0;
 }
 
 .gsm-chart-wrapper {
@@ -1216,35 +1240,44 @@ td {
 
 html.dark body {
     background:
-        radial-gradient(circle at 10% 0%, rgba(230, 0, 18, 0.22), transparent 26%),
-        radial-gradient(circle at 88% 12%, rgba(59, 130, 246, 0.14), transparent 30%),
-        linear-gradient(135deg, #020617 0%, #0f172a 52%, #111827 100%);
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 80% 20%, rgba(230, 0, 18, 0.18), transparent 28%),
+        linear-gradient(135deg, #e60012 0%, #c91624 42%, #7f1725 68%, #080f1f 100%);
     color: #f8fafc;
 }
 
 html.dark .gsm-main {
     background:
-        radial-gradient(circle at 12% 12%, rgba(230, 0, 18, 0.12), transparent 28%),
-        radial-gradient(circle at 88% 20%, rgba(59, 130, 246, 0.12), transparent 30%),
-        linear-gradient(135deg, rgba(2, 6, 23, 0.92), rgba(15, 23, 42, 0.98));
+        radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 84% 18%, rgba(230, 0, 18, 0.18), transparent 28%),
+        linear-gradient(135deg, #e60012 0%, #c91624 42%, #7f1725 68%, #080f1f 100%);
+    min-height: 100vh;
+}
+
+html.dark .gsm-auth-page,
+html.dark .gsm-auth-right {
+    background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 80% 20%, rgba(230, 0, 18, 0.18), transparent 28%),
+        linear-gradient(135deg, #e60012 0%, #c91624 42%, #7f1725 68%, #080f1f 100%);
 }
 
 html.dark .gsm-sidebar {
     background:
-        radial-gradient(circle at top left, rgba(230, 0, 18, 0.18), transparent 28%),
-        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 1));
+        radial-gradient(circle at top left, rgba(230, 0, 18, 0.16), transparent 28%),
+        linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
     border-color: rgba(51, 65, 85, 0.9);
 }
 
 html.dark .gsm-topbar {
     background:
-        linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(2, 6, 23, 0.92));
-    border-color: rgba(51, 65, 85, 0.9);
+        linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(2, 6, 23, 0.82));
+    border-color: rgba(51, 65, 85, 0.85);
 }
 
 html.dark .gsm-brand-card {
     background:
-        linear-gradient(135deg, rgba(230, 0, 18, 0.14), rgba(15, 23, 42, 0.9));
+        linear-gradient(135deg, rgba(230, 0, 18, 0.14), rgba(15, 23, 42, 0.86));
     border-color: rgba(230, 0, 18, 0.24);
 }
 
@@ -1259,8 +1292,8 @@ html.dark .gsm-icon-button,
 html.dark .gsm-theme-button,
 html.dark .gsm-mini-list,
 html.dark .gsm-empty-state {
-    background: rgba(15, 23, 42, 0.92);
-    border-color: rgba(71, 85, 105, 0.9);
+    background: rgba(15, 23, 42, 0.88);
+    border-color: rgba(71, 85, 105, 0.85);
     color: #f8fafc;
 }
 
@@ -1310,7 +1343,7 @@ html.dark .gsm-nav-link {
 }
 
 html.dark .gsm-nav-link:hover {
-    background: rgba(51, 65, 85, 0.8);
+    background: rgba(51, 65, 85, 0.72);
     color: #ffffff;
 }
 
@@ -1329,13 +1362,13 @@ html.dark .gsm-auth-card,
 html.dark .gsm-filter-card,
 html.dark .gsm-detail-card {
     background:
-        linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.78));
-    border-color: rgba(51, 65, 85, 0.92);
+        linear-gradient(135deg, rgba(15, 23, 42, 0.93), rgba(30, 41, 59, 0.74));
+    border-color: rgba(51, 65, 85, 0.88);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
 }
 
 html.dark .gsm-table thead th {
-    background: rgba(30, 41, 59, 0.95);
+    background: rgba(30, 41, 59, 0.92);
     color: #e2e8f0;
     border-color: #334155;
 }
@@ -1352,7 +1385,7 @@ html.dark .gsm-table tbody tr:hover td {
 html.dark .bg-white,
 html.dark .bg-gray-50,
 html.dark .bg-gray-100 {
-    background-color: #0f172a !important;
+    background-color: rgba(15, 23, 42, 0.9) !important;
     color: #f8fafc !important;
 }
 
@@ -1446,13 +1479,13 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-topbar {
-        grid-template-columns: 48px minmax(180px, 1fr) auto;
+        grid-template-columns: 42px minmax(180px, 1fr) auto;
     }
 
     .gsm-search {
-        width: 250px;
-        max-width: 250px;
-        flex-basis: 250px;
+        width: 240px;
+        max-width: 240px;
+        flex-basis: 240px;
     }
 
     .gsm-profile-pill strong {
@@ -1462,7 +1495,7 @@ html.dark .gsm-alert-card.success {
 
 @media (max-width: 1080px) {
     .gsm-topbar {
-        grid-template-columns: 48px minmax(0, 1fr);
+        grid-template-columns: 42px minmax(0, 1fr);
     }
 
     .gsm-top-actions {
@@ -1474,9 +1507,9 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-search {
-        width: 280px;
-        max-width: 280px;
-        flex-basis: 280px;
+        width: 260px;
+        max-width: 260px;
+        flex-basis: 260px;
     }
 
     .gsm-content {
@@ -1573,8 +1606,8 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-topbar {
-        grid-template-columns: 48px minmax(0, 1fr);
-        padding: 12px 16px;
+        grid-template-columns: 42px minmax(0, 1fr);
+        padding: 10px 16px;
     }
 
     .gsm-top-actions {
@@ -1661,12 +1694,6 @@ html.dark .gsm-alert-card.success {
 .gsm-action-link.delete {
     background: #fee2e2;
     color: #991b1b;
-}
-
-.gsm-alert-card.success {
-    background: #dcfce7;
-    border-color: #bbf7d0;
-    color: #166534;
 }
 
 html.dark .gsm-filter-card {
@@ -1798,7 +1825,7 @@ html.dark .gsm-table .text-slate-500 {
 
 .gsm-helper-card {
     position: sticky;
-    top: 116px;
+    top: 96px;
     padding: 24px;
     border-radius: 28px;
     background: linear-gradient(180deg, #fff1f2, #ffffff);
@@ -1929,12 +1956,12 @@ html.dark .gsm-preview-box p {
 
 .gsm-detail-card span {
     display: block;
+    margin-bottom: 8px;
     font-size: 12px;
     font-weight: 800;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 8px;
 }
 
 .gsm-detail-card strong {
@@ -1955,4 +1982,484 @@ html.dark .gsm-detail-card span {
 
 html.dark .gsm-detail-card strong {
     color: #ffffff;
+}
+
+/* =========================
+   SELECT DROPDOWN FIX
+========================= */
+
+.gsm-field select,
+.gsm-filter-card select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 46px !important;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 16px center !important;
+    background-size: 18px 18px !important;
+}
+
+.gsm-field select:hover,
+.gsm-filter-card select:hover {
+    border-color: var(--gsm-red) !important;
+}
+
+html.dark .gsm-field select,
+html.dark .gsm-filter-card select {
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+/* =========================
+   FIXED TOPBAR + PROFILE MENU
+========================= */
+
+/* Topbar tetap di atas saat scroll */
+.gsm-topbar {
+    position: fixed;
+    top: 0;
+    left: var(--gsm-sidebar-current);
+    right: 0;
+    z-index: 90;
+
+    min-height: 68px;
+    padding: 10px 24px;
+
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Supaya konten tidak ketutup topbar */
+.gsm-content {
+    padding-top: 96px;
+}
+
+/* Karena topbar sekarang cuma profile picture */
+.gsm-top-actions {
+    grid-column: auto !important;
+    width: auto !important;
+    justify-content: flex-end !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+}
+
+/* Profile picture button */
+.gsm-profile-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gsm-profile-menu-button {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    background: transparent;
+
+    display: grid;
+    place-items: center;
+
+    cursor: pointer;
+}
+
+.gsm-profile-menu-button img,
+.gsm-profile-dropdown-header img {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    object-fit: cover;
+    display: block;
+
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+.gsm-profile-menu-button:hover img,
+.gsm-profile-menu-button:hover .gsm-profile-initial {
+    transform: translateY(-1px);
+}
+
+.gsm-profile-initial {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+
+    background: linear-gradient(135deg, #ff1744, #e60012);
+    color: #ffffff;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+/* Dropdown profile */
+.gsm-profile-dropdown {
+    position: absolute;
+    top: 54px;
+    right: 0;
+
+    width: 270px;
+    border-radius: 24px;
+
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.18);
+
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+}
+
+.gsm-profile-dropdown-header {
+    padding: 18px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.gsm-profile-dropdown-header strong {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.gsm-profile-dropdown-header small {
+    display: block;
+    margin-top: 3px;
+
+    max-width: 170px;
+
+    font-size: 12px;
+    color: #64748b;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gsm-profile-dropdown-item {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 18px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: transparent;
+    border: 0;
+
+    color: #334155;
+    font-size: 14px;
+    font-weight: 800;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.gsm-profile-dropdown-item:hover {
+    background: #f8fafc;
+    color: var(--gsm-red);
+}
+
+.gsm-profile-dropdown-item span {
+    width: 22px;
+    display: inline-flex;
+    justify-content: center;
+}
+
+.gsm-profile-dropdown-item.danger {
+    color: #991b1b;
+}
+
+.gsm-profile-dropdown-item.danger:hover {
+    background: #fff1f2;
+    color: var(--gsm-red);
+}
+
+/* Dark mode dropdown */
+html.dark .gsm-profile-dropdown {
+    background: rgba(15, 23, 42, 0.94);
+    border-color: rgba(71, 85, 105, 0.88);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+}
+
+html.dark .gsm-profile-dropdown-header {
+    border-color: rgba(71, 85, 105, 0.88);
+}
+
+html.dark .gsm-profile-dropdown-header strong {
+    color: #ffffff;
+}
+
+html.dark .gsm-profile-dropdown-header small {
+    color: #cbd5e1;
+}
+
+html.dark .gsm-profile-dropdown-item {
+    color: #e2e8f0;
+}
+
+html.dark .gsm-profile-dropdown-item:hover {
+    background: rgba(51, 65, 85, 0.78);
+    color: #ffffff;
+}
+
+html.dark .gsm-profile-dropdown-item.danger {
+    color: #fecaca;
+}
+
+html.dark .gsm-profile-dropdown-item.danger:hover {
+    background: rgba(127, 29, 29, 0.7);
+    color: #ffffff;
+}
+
+/* Responsive fixed topbar */
+@media (max-width: 1080px) {
+    .gsm-topbar {
+        left: var(--gsm-sidebar-current);
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+    }
+
+    .gsm-top-actions {
+        grid-column: auto !important;
+        width: auto !important;
+        justify-content: flex-end !important;
+        overflow: visible !important;
+        padding-bottom: 0 !important;
+    }
+
+    .gsm-content {
+        padding-top: 96px;
+    }
+}
+
+@media (max-width: 767px) {
+    .gsm-topbar {
+        left: 0;
+        padding: 10px 16px;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+    }
+
+    .gsm-content {
+        padding-top: 92px;
+    }
+
+    .gsm-profile-dropdown {
+        right: 0;
+        width: 240px;
+    }
+}
+/* =========================
+   PROFILE SETTINGS
+========================= */
+
+.gsm-settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.gsm-setting-card {
+    padding: 18px;
+    border-radius: 24px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+}
+
+.gsm-setting-card h4 {
+    font-size: 16px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.gsm-setting-card p {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.gsm-setting-action {
+    margin-top: 16px;
+}
+
+.gsm-setting-button {
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #111827;
+    color: #ffffff;
+    border: 0;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.gsm-setting-button:hover {
+    background: var(--gsm-red);
+}
+
+.gsm-setting-select {
+    width: 100%;
+    min-height: 42px;
+    margin-top: 16px;
+    padding: 0 16px;
+
+    border-radius: 999px !important;
+    background: #ffffff;
+    border: 1px solid #dbe1ea;
+
+    color: #0f172a;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+html.dark .gsm-setting-card {
+    background: rgba(15, 23, 42, 0.88);
+    border-color: rgba(71, 85, 105, 0.88);
+}
+
+html.dark .gsm-setting-card h4 {
+    color: #ffffff;
+}
+
+html.dark .gsm-setting-card p {
+    color: #cbd5e1;
+}
+
+html.dark .gsm-setting-select {
+    background: #020617;
+    border-color: #334155;
+    color: #ffffff;
+}
+
+@media (max-width: 767px) {
+    .gsm-settings-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* =========================
+   PROFILE PHOTO UPLOAD
+========================= */
+
+.gsm-profile-photo-field {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 18px;
+    border-radius: 26px;
+
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+}
+
+.gsm-profile-photo-preview {
+    width: 86px;
+    height: 86px;
+    min-width: 86px;
+
+    border-radius: 999px;
+    overflow: hidden;
+
+    background: linear-gradient(135deg, #ff1744, #e60012);
+
+    display: grid;
+    place-items: center;
+
+    box-shadow: 0 16px 34px rgba(230, 0, 18, 0.22);
+}
+
+.gsm-profile-photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gsm-profile-photo-preview span {
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.gsm-profile-photo-content {
+    min-width: 0;
+}
+
+.gsm-profile-photo-content label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.gsm-profile-photo-content p {
+    margin-top: 4px;
+    margin-bottom: 12px;
+
+    font-size: 13px;
+    color: #64748b;
+}
+
+.gsm-profile-photo-content input[type="file"] {
+    width: 100%;
+
+    padding: 12px 14px;
+    border-radius: 18px;
+
+    border: 1px solid #dbe1ea;
+    background: #ffffff;
+
+    color: #0f172a;
+    font-size: 13px;
+}
+
+/* Dark mode */
+html.dark .gsm-profile-photo-field {
+    background: rgba(15, 23, 42, 0.88);
+    border-color: rgba(71, 85, 105, 0.88);
+}
+
+html.dark .gsm-profile-photo-content label {
+    color: #ffffff;
+}
+
+html.dark .gsm-profile-photo-content p {
+    color: #cbd5e1;
+}
+
+html.dark .gsm-profile-photo-content input[type="file"] {
+    background: #020617;
+    color: #f8fafc;
+    border-color: #334155;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .gsm-profile-photo-field {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

@@ -111,6 +111,7 @@
 
                                 $allLocations = collect($locations)
                                     ->merge($defaultLocations)
+                                    ->filter()
                                     ->unique()
                                     ->values();
                             @endphp
@@ -184,7 +185,7 @@
                     </div>
 
                     <div class="gsm-form-actions">
-                        <button class="gsm-button-primary">
+                        <button type="submit" class="gsm-button-primary">
                             Simpan Barang
                         </button>
 
@@ -206,7 +207,7 @@
 
                     <ul>
                         <li>Pilih kategori untuk membuat kode otomatis.</li>
-                        <li>Gunakan lokasi yang sudah tersedia atau pilih Lokasi Lainnya.</li>
+                        <li>Gunakan lokasi yang tersedia atau pilih Lokasi Lainnya.</li>
                         <li>Pastikan stok dan kondisi barang sesuai data fisik.</li>
                     </ul>
                 </aside>
@@ -221,6 +222,10 @@
             const previewCode = document.getElementById('preview-code');
 
             async function generateCode(categoryId) {
+                if (!codeInput || !previewCode) {
+                    return;
+                }
+
                 if (!categoryId) {
                     codeInput.value = '';
                     codeInput.placeholder = 'Pilih kategori untuk membuat kode otomatis';
@@ -265,11 +270,17 @@
             const locationOtherInput = document.getElementById('location_other');
 
             function toggleLocationOther() {
-                if (locationSelect.value === 'other') {
-                    locationOtherWrapper.classList.remove('hidden');
+                if (!locationSelect || !locationOtherWrapper || !locationOtherInput) {
+                    return;
+                }
+
+                const shouldShowOtherField = locationSelect.value === 'other';
+
+                locationOtherWrapper.classList.toggle('hidden', !shouldShowOtherField);
+
+                if (shouldShowOtherField) {
                     locationOtherInput.setAttribute('required', 'required');
                 } else {
-                    locationOtherWrapper.classList.add('hidden');
                     locationOtherInput.removeAttribute('required');
                     locationOtherInput.value = '';
                 }

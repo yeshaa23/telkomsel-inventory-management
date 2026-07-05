@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,6 +15,21 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('/language', function (Request $request) {
+        $validated = $request->validate([
+            'locale' => [
+                'required',
+                'in:id,en',
+            ],
+        ]);
+
+        session([
+            'locale' => $validated['locale'],
+        ]);
+
+        return back();
+    })->name('language.update');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware('role:Admin,Staff,Manager')
         ->name('dashboard');

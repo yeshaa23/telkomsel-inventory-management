@@ -1,54 +1,134 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
+        <p class="gsm-eyebrow">Profile Information</p>
+
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+            Informasi Profil
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-300">
+            Perbarui nama, email, dan foto profil akun Anda.
         </p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
-
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form
+        method="POST"
+        action="{{ route('profile.update') }}"
+        enctype="multipart/form-data"
+        class="mt-6 space-y-6"
+    >
         @csrf
         @method('patch')
 
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        @php
+            $user = $user ?? auth()->user();
+
+            $avatarUrl = null;
+
+            if (!empty($user->profile_photo_path)) {
+                $avatarUrl = \Illuminate\Support\Facades\Storage::url($user->profile_photo_path);
+            }
+
+            $initial = strtoupper(substr($user->name, 0, 1));
+        @endphp
+
+        <div class="gsm-profile-photo-field">
+            <div class="gsm-profile-photo-preview">
+                @if($avatarUrl)
+                    <img
+                        id="profile-photo-preview"
+                        src="{{ $avatarUrl }}"
+                        alt="{{ $user->name }}"
+                    >
+
+                    <span id="profile-photo-initial" class="hidden">
+                        {{ $initial }}
+                    </span>
+                @else
+                    <img
+                        id="profile-photo-preview"
+                        src=""
+                        alt="{{ $user->name }}"
+                        class="hidden"
+                    >
+
+                    <span id="profile-photo-initial">
+                        {{ $initial }}
+                    </span>
+                @endif
+            </div>
+
+            <div class="gsm-profile-photo-content">
+                <label for="profile_photo">
+                    Foto Profil
+                </label>
+
+                <p>
+                    Gunakan foto JPG atau PNG maksimal 2 MB.
+                </p>
+
+                <input
+                    type="file"
+                    name="profile_photo"
+                    id="profile_photo"
+                    accept="image/png, image/jpeg, image/jpg"
+                >
+
+                @error('profile_photo')
+                    <p class="gsm-error-text">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+        <div class="gsm-field">
+            <label for="name">
+                Nama
+            </label>
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
+            <input
+                id="name"
+                name="name"
+                type="text"
+                value="{{ old('name', $user->name) }}"
+                required
+                autofocus
+                autocomplete="name"
+            >
 
-                        <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
+            @error('name')
+                <p class="gsm-error-text">
+                    {{ $message }}
+                </p>
+            @enderror
+        </div>
 
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
+        <div class="gsm-field">
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                id="email"
+                name="email"
+                type="email"
+                value="{{ old('email', $user->email) }}"
+                required
+                autocomplete="username"
+            >
+
+            @error('email')
+                <p class="gsm-error-text">
+                    {{ $message }}
+                </p>
+            @enderror
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <button type="submit" class="gsm-button-primary">
+                Simpan Profil
+            </button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -56,9 +136,41 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
+                    class="text-sm text-slate-500 dark:text-slate-300"
+                >
+                    Tersimpan.
+                </p>
             @endif
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const photoInput = document.getElementById('profile_photo');
+            const photoPreview = document.getElementById('profile-photo-preview');
+            const photoInitial = document.getElementById('profile-photo-initial');
+
+            if (!photoInput || !photoPreview || !photoInitial) {
+                return;
+            }
+
+            photoInput.addEventListener('change', function () {
+                const file = this.files && this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    photoPreview.src = event.target.result;
+                    photoPreview.classList.remove('hidden');
+                    photoInitial.classList.add('hidden');
+                };
+
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
 </section>
