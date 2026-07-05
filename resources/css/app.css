@@ -318,18 +318,20 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 
 /* Topbar */
 .gsm-topbar {
+    position: fixed;
+    top: 0;
+    left: var(--gsm-sidebar-current);
+    right: 0;
+    z-index: 90;
     min-height: 68px;
     padding: 10px 24px;
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(226, 232, 240, 0.85);
     display: grid;
-    grid-template-columns: 42px minmax(220px, 1fr) auto;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 45;
 }
 
 .gsm-sidebar-toggle {
@@ -386,10 +388,14 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 .gsm-top-actions {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-end !important;
     gap: 9px;
     flex-wrap: nowrap;
     min-width: 0;
+    grid-column: auto !important;
+    width: auto !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
 }
 
 .gsm-top-actions form {
@@ -523,8 +529,8 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-content {
-    padding: 28px;
     min-width: 0;
+    padding: 96px 28px 28px;
 }
 
 .gsm-mobile-nav,
@@ -1027,7 +1033,7 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 .gsm-auth-page {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(420px, 0.9fr);
+    grid-template-columns: minmax(0, 1.12fr) minmax(440px, 0.88fr);
     background: #ffffff;
 }
 
@@ -1095,13 +1101,21 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-auth-features {
-    margin-top: 52px;
+    position: absolute;
+    left: 54px;
+    right: 54px;
+    bottom: clamp(140px, 20vh, 210px);
+    width: auto;
+    max-width: 980px;
+    margin-top: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
+    border: 0 !important;
 }
 
 .gsm-auth-features div {
+    min-height: 92px;
     padding: 18px;
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.12);
@@ -1132,8 +1146,8 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 
 .gsm-auth-card {
     width: 100%;
-    max-width: 460px;
-    padding: 34px;
+    max-width: 520px;
+    padding: 38px;
     border-radius: 34px;
     background: rgba(255, 255, 255, 0.94);
     border: 1px solid #e5e7eb;
@@ -1495,15 +1509,7 @@ html.dark .gsm-alert-card.success {
 
 @media (max-width: 1080px) {
     .gsm-topbar {
-        grid-template-columns: 42px minmax(0, 1fr);
-    }
-
-    .gsm-top-actions {
-        grid-column: 1 / -1;
-        width: 100%;
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 4px;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
     }
 
     .gsm-search {
@@ -1513,7 +1519,7 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-content {
-        padding: 20px;
+        padding: 96px 20px 20px;
     }
 }
 
@@ -1545,7 +1551,8 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-auth-card {
-        padding: 26px;
+        max-width: 100%;
+        padding: 28px;
         border-radius: 28px;
     }
 }
@@ -1606,7 +1613,8 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-topbar {
-        grid-template-columns: 42px minmax(0, 1fr);
+        left: 0;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
         padding: 10px 16px;
     }
 
@@ -1622,7 +1630,7 @@ html.dark .gsm-alert-card.success {
     }
 
     .gsm-content {
-        padding: 18px;
+        padding: 92px 18px 18px;
     }
 }
 
@@ -2011,39 +2019,8 @@ html.dark .gsm-filter-card select {
     background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
 }
 /* =========================
-   FIXED TOPBAR + PROFILE MENU
+   PROFILE MENU
 ========================= */
-
-/* Topbar tetap di atas saat scroll */
-.gsm-topbar {
-    position: fixed;
-    top: 0;
-    left: var(--gsm-sidebar-current);
-    right: 0;
-    z-index: 90;
-
-    min-height: 68px;
-    padding: 10px 24px;
-
-    display: grid;
-    grid-template-columns: 42px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-}
-
-/* Supaya konten tidak ketutup topbar */
-.gsm-content {
-    padding-top: 96px;
-}
-
-/* Karena topbar sekarang cuma profile picture */
-.gsm-top-actions {
-    grid-column: auto !important;
-    width: auto !important;
-    justify-content: flex-end !important;
-    overflow: visible !important;
-    padding-bottom: 0 !important;
-}
 
 /* Profile picture button */
 .gsm-profile-menu {
@@ -2229,37 +2206,7 @@ html.dark .gsm-profile-dropdown-item.danger:hover {
     color: #ffffff;
 }
 
-/* Responsive fixed topbar */
-@media (max-width: 1080px) {
-    .gsm-topbar {
-        left: var(--gsm-sidebar-current);
-        grid-template-columns: 42px minmax(0, 1fr) auto;
-    }
-
-    .gsm-top-actions {
-        grid-column: auto !important;
-        width: auto !important;
-        justify-content: flex-end !important;
-        overflow: visible !important;
-        padding-bottom: 0 !important;
-    }
-
-    .gsm-content {
-        padding-top: 96px;
-    }
-}
-
 @media (max-width: 767px) {
-    .gsm-topbar {
-        left: 0;
-        padding: 10px 16px;
-        grid-template-columns: 42px minmax(0, 1fr) auto;
-    }
-
-    .gsm-content {
-        padding-top: 92px;
-    }
-
     .gsm-profile-dropdown {
         right: 0;
         width: 240px;
@@ -2507,4 +2454,19 @@ html.dark .gsm-profile-photo-content input[type="file"] {
 
 html.dark .gsm-auth-helper-text {
     color: #cbd5e1;
+}
+/* AUTH RESPONSIVE POSITION */
+
+@media (max-height: 820px) and (min-width: 769px) {
+    .gsm-auth-features {
+        bottom: 54px;
+    }
+}
+
+@media (max-width: 768px) {
+    .gsm-auth-features {
+        position: static;
+        width: 100%;
+        margin-top: 36px;
+    }
 }
