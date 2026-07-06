@@ -4,7 +4,7 @@
 
         <div>
             <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">
-                Name
+                {{ __('app.name') }}
             </label>
 
             <input
@@ -15,7 +15,7 @@
                 required
                 autofocus
                 autocomplete="name"
-                placeholder="Enter your name"
+                placeholder="{{ __('app.full_name_placeholder') }}"
                 class="block w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
             >
 
@@ -24,7 +24,7 @@
 
         <div>
             <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">
-                Email
+                {{ __('app.email') }}
             </label>
 
             <input
@@ -43,7 +43,7 @@
 
         <div>
             <label for="role_id" class="mb-2 block text-sm font-semibold text-slate-700">
-                Role
+                {{ __('app.account_role') }}
             </label>
 
             <select
@@ -53,18 +53,23 @@
                 class="block w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
             >
                 <option value="">
-                    Select role
+                    {{ __('app.choose_account_role') }}
                 </option>
 
                 @foreach ($roles as $role)
+                    @php
+                        $roleKey = 'app.role_' . strtolower($role->name);
+                        $roleLabel = __($roleKey);
+                    @endphp
+
                     <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                        {{ ucfirst($role->name) }}
+                        {{ $roleLabel === $roleKey ? ucfirst($role->name) : $roleLabel }}
                     </option>
                 @endforeach
             </select>
 
             <p class="gsm-auth-helper-text">
-                Choose Admin, Staff, or Manager based on the account access needed.
+                {{ __('app.role_selection_note') }}
             </p>
 
             <x-input-error :messages="$errors->get('role_id')" class="mt-2" />
@@ -72,7 +77,7 @@
 
         <div>
             <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">
-                Password
+                {{ __('app.password') }}
             </label>
 
             <input
@@ -81,7 +86,7 @@
                 name="password"
                 required
                 autocomplete="new-password"
-                placeholder="Enter your password"
+                placeholder="{{ __('app.login_placeholder_password') }}"
                 class="block w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
             >
 
@@ -90,7 +95,7 @@
 
         <div>
             <label for="password_confirmation" class="mb-2 block text-sm font-semibold text-slate-700">
-                Confirm Password
+                {{ __('app.confirm_password') }}
             </label>
 
             <input
@@ -99,7 +104,7 @@
                 name="password_confirmation"
                 required
                 autocomplete="new-password"
-                placeholder="Confirm your password"
+                placeholder="{{ __('app.repeat_password') }}"
                 class="block w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
             >
 
@@ -110,13 +115,14 @@
             type="submit"
             class="flex w-full items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-red-200 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         >
-            Register
+            {{ __('app.register') }}
         </button>
 
         <p class="text-center text-sm text-slate-600">
-            Already have an account?
+            {{ __('app.already_have_account') }}
+
             <a href="{{ route('login') }}" class="font-bold text-red-600 hover:text-red-700 hover:underline">
-                Log in
+                {{ __('app.login') }}
             </a>
         </p>
     </form>

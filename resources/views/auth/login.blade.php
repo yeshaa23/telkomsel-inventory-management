@@ -9,7 +9,7 @@
 
         <div>
             <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">
-                Email
+                {{ __('app.email') }}
             </label>
 
             <input
@@ -29,7 +29,7 @@
 
         <div>
             <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">
-                Password
+                {{ __('app.password') }}
             </label>
 
             <input
@@ -38,7 +38,7 @@
                 name="password"
                 required
                 autocomplete="current-password"
-                placeholder="Enter password"
+                placeholder="{{ __('app.login_placeholder_password') }}"
                 class="block w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-100"
             >
 
@@ -51,14 +51,17 @@
                     id="remember_me"
                     type="checkbox"
                     name="remember"
-                    class="rounded border-slate-300 text-red-600 shadow-sm focus:ring-red-500"
+                    class="gsm-auth-checkbox border-slate-300 text-red-600 shadow-sm focus:ring-red-500"
                 >
-                <span>Remember me</span>
+
+                <span>
+                    {{ __('app.remember_me') }}
+                </span>
             </label>
 
             @if (Route::has('password.request'))
                 <a href="{{ route('password.request') }}" class="text-sm font-semibold text-red-600 hover:text-red-700 hover:underline">
-                    Forgot password?
+                    {{ __('app.forgot_password') }}
                 </a>
             @endif
         </div>
@@ -67,14 +70,15 @@
             type="submit"
             class="flex w-full items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-red-200 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         >
-            Log in
+            {{ __('app.login') }}
         </button>
 
         @if (Route::has('register'))
             <p class="text-center text-sm text-slate-600">
-                Don't have an account?
+                {{ __('app.dont_have_account') }}
+
                 <a href="{{ route('register') }}" class="font-bold text-red-600 hover:text-red-700 hover:underline">
-                    Register
+                    {{ __('app.register') }}
                 </a>
             </p>
         @endif

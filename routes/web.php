@@ -27,7 +27,9 @@ Route::middleware(['auth'])->group(function () {
             'locale' => $validated['locale'],
         ]);
 
-        return back();
+        return back()->withCookie(
+            cookie('locale', $validated['locale'], 60 * 24 * 365)
+        );
     })->name('language.update');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
