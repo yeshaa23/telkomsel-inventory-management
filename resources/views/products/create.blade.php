@@ -22,7 +22,12 @@
                 </a>
             </div>
 
-            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="gsm-form-layout">
+            <form
+                action="{{ route('products.store') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                class="gsm-form-layout"
+            >
                 @csrf
 
                 <div class="gsm-form-main">
@@ -69,7 +74,10 @@
                                 <option value="">{{ __('app.choose_category') }}</option>
 
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                    <option
+                                        value="{{ $category->id }}"
+                                        {{ old('category_id') == $category->id ? 'selected' : '' }}
+                                    >
                                         {{ $category->name }}
                                     </option>
                                 @endforeach
@@ -120,7 +128,10 @@
                                 <option value="">{{ __('app.choose_location') }}</option>
 
                                 @foreach($allLocations as $location)
-                                    <option value="{{ $location }}" {{ old('location_select') == $location ? 'selected' : '' }}>
+                                    <option
+                                        value="{{ $location }}"
+                                        {{ old('location_select') == $location ? 'selected' : '' }}
+                                    >
                                         {{ $location }}
                                     </option>
                                 @endforeach
@@ -156,9 +167,18 @@
 
                             <select name="condition" id="condition">
                                 <option value="">{{ __('app.choose_condition') }}</option>
-                                <option value="Baik" {{ old('condition') == 'Baik' ? 'selected' : '' }}>{{ __('app.good') }}</option>
-                                <option value="Rusak Ringan" {{ old('condition') == 'Rusak Ringan' ? 'selected' : '' }}>{{ __('app.minor_damage') }}</option>
-                                <option value="Rusak Berat" {{ old('condition') == 'Rusak Berat' ? 'selected' : '' }}>{{ __('app.major_damage') }}</option>
+
+                                <option value="Baik" {{ old('condition') == 'Baik' ? 'selected' : '' }}>
+                                    {{ __('app.good') }}
+                                </option>
+
+                                <option value="Rusak Ringan" {{ old('condition') == 'Rusak Ringan' ? 'selected' : '' }}>
+                                    {{ __('app.minor_damage') }}
+                                </option>
+
+                                <option value="Rusak Berat" {{ old('condition') == 'Rusak Berat' ? 'selected' : '' }}>
+                                    {{ __('app.major_damage') }}
+                                </option>
                             </select>
 
                             @error('condition')
@@ -169,11 +189,20 @@
                         <div class="gsm-field gsm-field-full">
                             <label for="image">{{ __('app.upload_product_image') }}</label>
 
+                            <div class="mb-3">
+                                <img
+                                    id="product-image-preview"
+                                    src=""
+                                    alt="{{ __('app.product_image') }}"
+                                    class="w-32 h-32 object-cover rounded-3xl border border-slate-200 hidden"
+                                >
+                            </div>
+
                             <input
                                 type="file"
                                 name="image"
                                 id="image"
-                                accept="image/png, image/jpeg, image/jpg"
+                                accept="image/png, image/jpeg, image/jpg, image/webp"
                             >
 
                             <small>{{ __('app.image_format_help') }}</small>
@@ -289,6 +318,28 @@
             if (locationSelect) {
                 locationSelect.addEventListener('change', toggleLocationOther);
                 toggleLocationOther();
+            }
+
+            const imageInput = document.getElementById('image');
+            const imagePreview = document.getElementById('product-image-preview');
+
+            if (imageInput && imagePreview) {
+                imageInput.addEventListener('change', function () {
+                    const file = this.files && this.files[0];
+
+                    if (!file) {
+                        return;
+                    }
+
+                    const previewUrl = URL.createObjectURL(file);
+
+                    imagePreview.src = previewUrl;
+                    imagePreview.classList.remove('hidden');
+
+                    imagePreview.onload = function () {
+                        URL.revokeObjectURL(previewUrl);
+                    };
+                });
             }
         });
     </script>
