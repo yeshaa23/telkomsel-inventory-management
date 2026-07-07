@@ -92,7 +92,6 @@
                         <option value="available" {{ request('stock_status') == 'available' ? 'selected' : '' }}>{{ __('app.available') }}</option>
                         <option value="low_stock" {{ request('stock_status') == 'low_stock' ? 'selected' : '' }}>{{ __('app.low_stock') }}</option>
                         <option value="out_of_stock" {{ request('stock_status') == 'out_of_stock' ? 'selected' : '' }}>{{ __('app.out_of_stock') }}</option>
-                        <option value="damaged" {{ request('stock_status') == 'damaged' ? 'selected' : '' }}>{{ __('app.damaged_products') }}</option>
                     </select>
                 </div>
 
@@ -202,19 +201,19 @@
                                 <td>
                                     @if($product->stock_status === 'available')
                                         <span class="gsm-badge success">
-                                            {{ __('app.' . $product->stock_status) }}
+                                            {{ $product->stock_status_label }}
                                         </span>
                                     @elseif($product->stock_status === 'low_stock')
                                         <span class="gsm-badge warning">
-                                            {{ __('app.' . $product->stock_status) }}
+                                            {{ $product->stock_status_label }}
                                         </span>
                                     @elseif($product->stock_status === 'out_of_stock')
                                         <span class="gsm-badge danger">
-                                            {{ __('app.' . $product->stock_status) }}
+                                            {{ $product->stock_status_label }}
                                         </span>
                                     @else
                                         <span class="gsm-badge info">
-                                            {{ __('app.' . $product->stock_status) }}
+                                            {{ $product->stock_status_label }}
                                         </span>
                                     @endif
                                 </td>

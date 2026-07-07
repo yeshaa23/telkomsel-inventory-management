@@ -58,14 +58,7 @@ class ProductController extends Controller
                 }
 
                 if ($request->stock_status === 'out_of_stock') {
-                    $query->where('stock', '<=', 0);
-                }
-
-                if ($request->stock_status === 'damaged') {
-                    $query->where(function ($subQuery) {
-                        $subQuery->where('minor_damage_stock', '>', 0)
-                            ->orWhere('major_damage_stock', '>', 0);
-                    });
+                    $query->where('good_stock', '<=', 0);
                 }
             });
 

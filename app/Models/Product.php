@@ -169,15 +169,13 @@ class Product extends Model
 
     public function getStockStatusAttribute(): string
     {
-        if ((int) $this->stock <= 0) {
+        $availableStock = (int) $this->available_stock;
+
+        if ($availableStock <= 0) {
             return 'out_of_stock';
         }
 
-        if ($this->damaged_stock > 0 || $this->condition !== self::CONDITION_GOOD) {
-            return 'damaged';
-        }
-
-        if ($this->available_stock > 0 && $this->available_stock <= 5) {
+        if ($availableStock <= 5) {
             return 'low_stock';
         }
 
@@ -189,7 +187,6 @@ class Product extends Model
         return match ($this->stock_status) {
             'out_of_stock' => __('app.out_of_stock'),
             'low_stock' => __('app.low_stock'),
-            'damaged' => __('app.damaged'),
             default => __('app.available'),
         };
     }
