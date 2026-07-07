@@ -42,7 +42,7 @@ class BorrowingController extends Controller
 
         $product = Product::findOrFail($request->product_id);
 
-        if ($product->good_stock < $request->quantity) {
+        if ($product->available_stock < $request->quantity) {
             return back()
                 ->withErrors([
                     'quantity' => __('app.error_insufficient_good_stock'),

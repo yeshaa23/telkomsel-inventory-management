@@ -257,9 +257,16 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'code' => $product ? 'required|string|max:255|unique:products,code,' . $productId : 'nullable|string|max:255|unique:products,code',
             'name' => 'required|string|max:255',
-            'good_stock' => 'required|integer|min:0',
-            'minor_damage_stock' => 'required|integer|min:0',
-            'major_damage_stock' => 'required|integer|min:0',
+
+            // New stock-per-condition fields from the updated UI.
+            'good_stock' => 'nullable|required_without:stock|integer|min:0',
+            'minor_damage_stock' => 'nullable|required_without:stock|integer|min:0',
+            'major_damage_stock' => 'nullable|required_without:stock|integer|min:0',
+
+            // Backward compatibility for existing tests / older forms.
+            'stock' => 'nullable|integer|min:0',
+            'condition' => 'nullable|required_with:stock|in:Baik,Rusak Ringan,Rusak Berat',
+
             'location_select' => 'required|string|max:255',
             'location_other' => 'nullable|required_if:location_select,other|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -268,9 +275,28 @@ class ProductController extends Controller
 
     private function stockData(Request $request): array
     {
-        $goodStock = (int) $request->input('good_stock', 0);
-        $minorDamageStock = (int) $request->input('minor_damage_stock', 0);
-        $majorDamageStock = (int) $request->input('major_damage_stock', 0);
+        /*
+         * The new UI sends good_stock, minor_damage_stock, and major_damage_stock.
+         * Existing automated tests still send stock + condition.
+         * This fallback keeps both formats valid.
+         */
+        if (
+            ! $request->has('good_stock')
+            && ! $request->has('minor_damage_stock')
+            && ! $request->has('major_damage_stock')
+            && $request->has('stock')
+        ) {
+            $stock = (int) $request->input('stock', 0);
+            $condition = $request->input('condition', Product::CONDITION_GOOD);
+
+            $goodStock = $condition === Product::CONDITION_GOOD ? $stock : 0;
+            $minorDamageStock = $condition === Product::CONDITION_MINOR_DAMAGE ? $stock : 0;
+            $majorDamageStock = $condition === Product::CONDITION_MAJOR_DAMAGE ? $stock : 0;
+        } else {
+            $goodStock = (int) $request->input('good_stock', 0);
+            $minorDamageStock = (int) $request->input('minor_damage_stock', 0);
+            $majorDamageStock = (int) $request->input('major_damage_stock', 0);
+        }
 
         return [
             'good_stock' => $goodStock,

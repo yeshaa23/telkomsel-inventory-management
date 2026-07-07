@@ -39,6 +39,13 @@ class Product extends Model
         'stock_status_label',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (Product $product): void {
+            $product->normalizeLegacyStockFields();
+        });
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -91,31 +98,82 @@ class Product extends Model
         );
     }
 
+    public function normalizeLegacyStockFields(): void
+    {
+        /*
+         * Backward compatibility:
+         * Existing tests and older code may still create products using only:
+         * stock + condition.
+         *
+         * The new UI sends:
+         * good_stock + minor_damage_stock + major_damage_stock.
+         *
+         * If the new fields are not explicitly provided, convert the old stock
+         * value into the correct stock-per-condition column before saving.
+         */
+        $attributes = $this->getAttributes();
+
+        $hasStockConditionColumns =
+            array_key_exists('good_stock', $attributes)
+            || array_key_exists('minor_damage_stock', $attributes)
+            || array_key_exists('major_damage_stock', $attributes);
+
+        if (! $hasStockConditionColumns && array_key_exists('stock', $attributes)) {
+            $stock = max((int) ($attributes['stock'] ?? 0), 0);
+            $condition = $attributes['condition'] ?? self::CONDITION_GOOD;
+
+            $this->good_stock = $condition === self::CONDITION_GOOD ? $stock : 0;
+            $this->minor_damage_stock = $condition === self::CONDITION_MINOR_DAMAGE ? $stock : 0;
+            $this->major_damage_stock = $condition === self::CONDITION_MAJOR_DAMAGE ? $stock : 0;
+
+            return;
+        }
+
+        if ($hasStockConditionColumns) {
+            $this->syncStockFromConditionCounts();
+        }
+    }
+
     public function getAvailableStockAttribute(): int
     {
+        if (! array_key_exists('good_stock', $this->getAttributes())) {
+            return $this->condition === self::CONDITION_GOOD
+                ? max((int) $this->stock, 0)
+                : 0;
+        }
+
         return (int) ($this->good_stock ?? 0);
     }
 
     public function getDamagedStockAttribute(): int
     {
+        if (
+            ! array_key_exists('minor_damage_stock', $this->getAttributes())
+            && ! array_key_exists('major_damage_stock', $this->getAttributes())
+        ) {
+            return $this->condition !== self::CONDITION_GOOD
+                ? max((int) $this->stock, 0)
+                : 0;
+        }
+
         return (int) ($this->minor_damage_stock ?? 0)
             + (int) ($this->major_damage_stock ?? 0);
     }
 
     public function getConditionSummaryAttribute(): string
     {
-        return __('app.good') . ': ' . (int) $this->good_stock
-            . ' | ' . __('app.minor_damage') . ': ' . (int) $this->minor_damage_stock
-            . ' | ' . __('app.major_damage') . ': ' . (int) $this->major_damage_stock;
+        return __('app.good') . ': ' . (int) $this->available_stock
+            . ' | ' . __('app.minor_damage') . ': ' . (int) ($this->minor_damage_stock ?? 0)
+            . ' | ' . __('app.major_damage') . ': ' . (int) ($this->major_damage_stock ?? 0);
     }
 
     public function getStockStatusAttribute(): string
     {
-        if ($this->stock <= 0) {
+        if ((int) $this->stock <= 0) {
             return 'out_of_stock';
         }
 
-        if ($this->available_stock <= 0 && $this->damaged_stock > 0) {
+        if ($this->damaged_stock > 0 || $this->condition !== self::CONDITION_GOOD) {
             return 'damaged';
         }
 
