@@ -1031,16 +1031,13 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 ========================= */
 
 .gsm-auth-page {
-    min-height: 100vh;
     display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(440px, 0.88fr);
     background: #ffffff;
 }
 
 .gsm-auth-left {
     position: relative;
     overflow: hidden;
-    padding: 54px;
     color: white;
     background:
         radial-gradient(circle at 82% 20%, rgba(255, 255, 255, 0.2), transparent 24%),
@@ -1080,34 +1077,15 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
     font-size: 13px;
 }
 
-.gsm-auth-hero {
-    margin-top: 100px;
-    max-width: 680px;
-}
-
 .gsm-auth-hero h2 {
-    font-size: clamp(42px, 5vw, 72px);
-    line-height: 1;
     font-weight: 800;
-    letter-spacing: -0.05em;
 }
 
 .gsm-auth-hero p {
-    margin-top: 24px;
-    max-width: 600px;
     color: rgba(255, 255, 255, 0.82);
-    font-size: 18px;
-    line-height: 1.8;
 }
 
 .gsm-auth-features {
-    position: absolute;
-    left: 54px;
-    right: 54px;
-    bottom: clamp(140px, 20vh, 210px);
-    width: auto;
-    max-width: 980px;
-    margin-top: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
@@ -1115,8 +1093,6 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-auth-features div {
-    min-height: 92px;
-    padding: 18px;
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -1136,9 +1112,6 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 }
 
 .gsm-auth-right {
-    display: grid;
-    place-items: center;
-    padding: 40px;
     background:
         radial-gradient(circle at top right, rgba(230, 0, 18, 0.08), transparent 26%),
         #f8fafc;
@@ -1146,9 +1119,6 @@ body.gsm-sidebar-collapsed .gsm-nav-link:hover {
 
 .gsm-auth-card {
     width: 100%;
-    max-width: 520px;
-    padding: 38px;
-    border-radius: 34px;
     background: rgba(255, 255, 255, 0.94);
     border: 1px solid #e5e7eb;
     box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
@@ -2455,20 +2425,6 @@ html.dark .gsm-profile-photo-content input[type="file"] {
 html.dark .gsm-auth-helper-text {
     color: #cbd5e1;
 }
-/* AUTH RESPONSIVE POSITION */
-
-@media (max-height: 820px) and (min-width: 769px) {
-    .gsm-auth-features {
-        bottom: 54px;
-    }
-}
-
-@media (max-width: 768px) {
-    .gsm-auth-features {
-        position: static;
-        width: 100%;
-        margin-top: 36px;
-    }
 }
 
 /* AUTH RESPONSIVE BALANCE FIX */
