@@ -151,16 +151,9 @@ DB_PASSWORD=
 inventory-management-challenge/
 ├── app/
 │   ├── Exports/
-│   │   ├── BorrowingsExport.php
-│   │   └── ProductsExport.php
-│   │
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Api/
-│   │   │   │   ├── ApiBorrowingController.php
-│   │   │   │   ├── ApiCategoryController.php
-│   │   │   │   ├── ApiDashboardController.php
-│   │   │   │   └── ApiProductController.php
 │   │   │   ├── Auth/
 │   │   │   ├── ActivityLogController.php
 │   │   │   ├── BorrowingController.php
@@ -169,64 +162,20 @@ inventory-management-challenge/
 │   │   │   ├── ProductController.php
 │   │   │   ├── ProfileController.php
 │   │   │   └── ReportController.php
-│   │   │
 │   │   ├── Middleware/
-│   │   │   ├── RoleMiddleware.php
-│   │   │   └── SetLocale.php
-│   │   │
 │   │   └── Requests/
-│   │
-│   ├── Models/
-│   │   ├── ActivityLog.php
-│   │   ├── Borrowing.php
-│   │   ├── BorrowingDetail.php
-│   │   ├── Category.php
-│   │   ├── Product.php
-│   │   ├── Role.php
-│   │   └── User.php
-│   │
-│   └── Providers/
-│
-├── bootstrap/
-│   └── app.php
-│
-├── config/
+│   └── Models/
 │
 ├── database/
-│   ├── factories/
 │   ├── migrations/
 │   ├── seeders/
-│   │   ├── DatabaseSeeder.php
-│   │   ├── RoleSeeder.php
-│   │   └── UserSeeder.php
 │   └── sql/
 │       └── inventory_management_azure.sql
 │
-├── lang/
-│   ├── en/
-│   └── id/
-│
-├── public/
-│   └── images/
-│
 ├── resources/
 │   ├── css/
-│   │   └── app.css
 │   ├── js/
-│   │   ├── app.js
-│   │   └── bootstrap.js
 │   └── views/
-│       ├── activity-logs/
-│       ├── auth/
-│       ├── borrowings/
-│       ├── categories/
-│       ├── components/
-│       ├── layouts/
-│       ├── products/
-│       ├── profile/
-│       ├── reports/
-│       ├── dashboard.blade.php
-│       └── welcome.blade.php
 │
 ├── routes/
 │   ├── api.php
@@ -234,35 +183,25 @@ inventory-management-challenge/
 │   ├── console.php
 │   └── web.php
 │
-├── ssl/
-│   └── DigiCertGlobalRootG2.crt.pem
-│
-├── storage/
-│
 ├── tests/
 │   ├── Feature/
-│   ├── Unit/
-│   ├── Pest.php
-│   └── TestCase.php
+│   └── Unit/
 │
 ├── .github/
 │   └── workflows/
 │       └── inventory-management-ayesha.yml
 │
+├── public/
+├── storage/
+├── bootstrap/
+├── config/
+├── lang/
+├── ssl/
 ├── .env.example
-├── .gitignore
 ├── artisan
 ├── composer.json
-├── composer.lock
 ├── package.json
-├── package-lock.json
-├── phpunit.xml
-├── postcss.config.js
-├── tailwind.config.js
-├── vite.config.js
 └── README.md
-```
-
 ```
 
 ---
