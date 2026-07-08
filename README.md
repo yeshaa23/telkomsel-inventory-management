@@ -32,34 +32,6 @@ Aplikasi web berbasis **Laravel 12** yang dikembangkan untuk membantu pengelolaa
 
 ---
 
-## ✨ Fitur Utama
-
-* Authentication menggunakan Laravel Breeze
-* Login, register, logout, forgot password, dan reset password
-* Role-based access control untuk Admin, Staff, dan Manager
-* CRUD kategori barang
-* CRUD data barang
-* Upload dan preview gambar barang
-* Generate kode barang otomatis berdasarkan kategori
-* Pencarian, filter, sorting, dan pagination data barang
-* Validasi stok, kode barang unik, dan duplikasi barang
-* Peminjaman barang dengan pengurangan stok otomatis
-* Pengembalian barang dengan pemulihan stok otomatis
-* Status peminjaman: borrowed, returned, dan overdue
-* Status stok otomatis: tersedia, stok menipis, habis, atau perlu perhatian
-* Dashboard monitoring inventory
-* Grafik peminjaman per bulan
-* Laporan barang dan laporan peminjaman
-* Export laporan ke PDF, Excel, dan CSV
-* Activity log untuk mencatat aktivitas pengguna
-* REST API read-only untuk data barang, kategori, peminjaman, dan dashboard
-* Multi-language support Bahasa Indonesia dan English
-* Automated testing menggunakan Pest
-* CI/CD menggunakan GitHub Actions
-* Deployment menggunakan Azure App Service
-
----
-
 ## 👥 Role dan Hak Akses
 
 | Role    | Hak Akses                                                                                  |
