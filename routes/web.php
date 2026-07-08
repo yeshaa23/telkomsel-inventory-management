@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -15,6 +16,11 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/search', [GlobalSearchController::class, 'index'])
+        ->middleware('role:Admin,Staff,Manager')
+        ->name('search.index');
+
     Route::post('/language', function (Request $request) {
         $validated = $request->validate([
             'locale' => [

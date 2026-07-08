@@ -155,7 +155,7 @@
                 </div>
             </div>
 
-            <div class="gsm-table-wrapper">
+            <div class="gsm-table-wrapper" style="max-height: 360px; overflow-y: auto; overflow-x: auto; border-radius: 18px;">
                 <table class="gsm-table">
                     <thead>
                         <tr>
@@ -184,13 +184,13 @@
                                 <td>{{ $product->location }}</td>
                                 <td>
                                     @if($product->stock_status === 'available')
-                                        <span class="gsm-badge success">{{ __('app.' . $product->stock_status) }}</span>
+                                        <span class="gsm-badge success">{{ $product->stock_status_label }}</span>
                                     @elseif($product->stock_status === 'low_stock')
-                                        <span class="gsm-badge warning">{{ __('app.' . $product->stock_status) }}</span>
+                                        <span class="gsm-badge warning">{{ $product->stock_status_label }}</span>
                                     @elseif($product->stock_status === 'out_of_stock')
-                                        <span class="gsm-badge danger">{{ __('app.' . $product->stock_status) }}</span>
+                                        <span class="gsm-badge danger">{{ $product->stock_status_label }}</span>
                                     @else
-                                        <span class="gsm-badge info">{{ __('app.' . $product->stock_status) }}</span>
+                                        <span class="gsm-badge info">{{ $product->stock_status_label }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -219,7 +219,7 @@
                 </div>
             </div>
 
-            <div class="gsm-table-wrapper">
+            <div class="gsm-table-wrapper" style="max-height: 360px; overflow-y: auto; overflow-x: auto; border-radius: 18px;">
                 <table class="gsm-table">
                     <thead>
                         <tr>
@@ -291,7 +291,7 @@
                     </div>
                 </div>
 
-                <div class="gsm-table-wrapper">
+                <div class="gsm-table-wrapper" style="max-height: 360px; overflow-y: auto; overflow-x: auto; border-radius: 18px;">
                     <table class="gsm-table">
                         <thead>
                             <tr>
@@ -332,7 +332,7 @@
                     </div>
                 </div>
 
-                <div class="gsm-table-wrapper">
+                <div class="gsm-table-wrapper" style="max-height: 360px; overflow-y: auto; overflow-x: auto; border-radius: 18px;">
                     <table class="gsm-table">
                         <thead>
                             <tr>

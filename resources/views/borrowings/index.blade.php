@@ -174,9 +174,7 @@
                 </table>
             </div>
 
-            <div class="mt-6">
-                {{ $borrowings->links() }}
-            </div>
+            <x-gsm-pagination :paginator="$borrowings" />
         </section>
     </div>
 </x-app-layout>

@@ -157,6 +157,41 @@
                             $initial = strtoupper(substr($user->name, 0, 1));
                         @endphp
 
+
+                        <form
+                            method="GET"
+                            action="{{ route('search.index') }}"
+                            class="gsm-search hidden md:flex"
+                            role="search"
+                        >
+                            <button
+                                type="submit"
+                                class="gsm-search-submit"
+                                aria-label="{{ __('app.search') }}"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                >
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </button>
+
+                            <input
+                                type="search"
+                                name="q"
+                                value="{{ request('q') }}"
+                                placeholder="{{ __('app.global_search_placeholder') }}"
+                                autocomplete="off"
+                            >
+                        </form>
+
                         <div class="gsm-profile-menu">
                             <button
                                 type="button"

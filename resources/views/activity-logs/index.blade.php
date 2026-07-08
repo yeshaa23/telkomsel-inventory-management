@@ -131,9 +131,7 @@
                 </table>
             </div>
 
-            <div class="mt-6">
-                {{ $activityLogs->links() }}
-            </div>
+            <x-gsm-pagination :paginator="$activityLogs" />
         </section>
     </div>
 </x-app-layout>

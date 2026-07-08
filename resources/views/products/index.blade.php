@@ -261,9 +261,7 @@
                 </table>
             </div>
 
-            <div class="mt-6">
-                {{ $products->links() }}
-            </div>
+            <x-gsm-pagination :paginator="$products" />
         </section>
     </div>
 </x-app-layout>

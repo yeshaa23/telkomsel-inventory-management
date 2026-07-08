@@ -125,9 +125,7 @@
                 </table>
             </div>
 
-            <div class="mt-6">
-                {{ $categories->links() }}
-            </div>
+            <x-gsm-pagination :paginator="$categories" />
         </section>
     </div>
 </x-app-layout>
