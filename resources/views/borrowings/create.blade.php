@@ -99,23 +99,57 @@
                         </div>
 
                         <div class="gsm-field gsm-field-full">
-                            <label for="product_id">{{ __('app.product') }}</label>
+                            <label for="product_search">{{ __('app.product') }}</label>
 
-                            <select name="product_id" id="product_id" required>
-                                <option value="">{{ __('app.choose_product') }}</option>
+                            @php
+                                $productOptions = $products
+                                    ->map(function ($product) {
+                                        return [
+                                            'id' => (string) $product->id,
+                                            'code' => $product->code,
+                                            'name' => $product->name,
+                                            'stock' => (int) $product->good_stock,
+                                            'label' => $product->code . ' - ' . $product->name . ' | ' . __('app.available_good_stock') . ': ' . $product->good_stock,
+                                        ];
+                                    })
+                                    ->values();
 
-                                @foreach($products as $product)
-                                    <option
-                                        value="{{ $product->id }}"
-                                        data-code="{{ $product->code }}"
-                                        data-name="{{ $product->name }}"
-                                        data-stock="{{ $product->good_stock }}"
-                                        {{ old('product_id') == $product->id ? 'selected' : '' }}
-                                    >
-                                        {{ $product->code }} - {{ $product->name }} | {{ __('app.available_good_stock') }}: {{ $product->good_stock }}
-                                    </option>
+                                $selectedProduct = $products->firstWhere('id', (int) old('product_id'));
+
+                                $selectedProductLabel = $selectedProduct
+                                    ? $selectedProduct->code . ' - ' . $selectedProduct->name . ' | ' . __('app.available_good_stock') . ': ' . $selectedProduct->good_stock
+                                    : '';
+                            @endphp
+
+                            <input
+                                type="text"
+                                name="product_search"
+                                id="product_search"
+                                list="product_options"
+                                value="{{ old('product_search', $selectedProductLabel) }}"
+                                placeholder="{{ __('app.choose_product') }}"
+                                autocomplete="off"
+                                required
+                            >
+
+                            <input
+                                type="hidden"
+                                name="product_id"
+                                id="product_id"
+                                value="{{ old('product_id') }}"
+                            >
+
+                            <datalist id="product_options">
+                                @foreach($productOptions as $option)
+                                    <option value="{{ $option['label'] }}"></option>
                                 @endforeach
-                            </select>
+                            </datalist>
+
+                            <small>
+                                {{ app()->getLocale() === 'id'
+                                    ? 'Ketik kode atau nama barang, lalu pilih dari daftar yang muncul.'
+                                    : 'Type the item code or name, then choose from the list.' }}
+                            </small>
 
                             @error('product_id')
                                 <p class="gsm-error-text">{{ $message }}</p>
@@ -174,28 +208,85 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const productSelect = document.getElementById('product_id');
+            const productSearch = document.getElementById('product_search');
+            const productInput = document.getElementById('product_id');
             const previewProduct = document.getElementById('preview-product');
+            const borrowingForm = document.querySelector('form[action="{{ route('borrowings.store') }}"]');
 
-            function updateProductPreview() {
-                const selectedOption = productSelect.options[productSelect.selectedIndex];
+            const productOptions = @json($productOptions);
+            const stockText = @json(__('app.available_good_stock'));
+            const notSelectedText = @json(__('app.not_selected_yet'));
+            const invalidProductText = @json(app()->getLocale() === 'id'
+                ? 'Pilih barang dari daftar yang tersedia.'
+                : 'Choose a product from the available list.');
 
-                if (!selectedOption || !selectedOption.value) {
-                    previewProduct.textContent = @json(__('app.not_selected_yet'));
+            function findProductByLabel(label) {
+                return productOptions.find(function (product) {
+                    return product.label === label;
+                });
+            }
+
+            function findProductById(id) {
+                return productOptions.find(function (product) {
+                    return product.id === String(id);
+                });
+            }
+
+            function updateProductPreview(product) {
+                if (!previewProduct) {
                     return;
                 }
 
-                const code = selectedOption.dataset.code || '-';
-                const stock = selectedOption.dataset.stock || '0';
+                if (!product) {
+                    previewProduct.textContent = notSelectedText;
+                    return;
+                }
 
-                const stockText = @json(__('app.available_good_stock'));
-
-                previewProduct.textContent = `${code} | ${stockText} ${stock}`;
+                previewProduct.textContent = `${product.code} | ${stockText}: ${product.stock}`;
             }
 
-            if (productSelect) {
-                productSelect.addEventListener('change', updateProductPreview);
-                updateProductPreview();
+            function syncProductSelection() {
+                if (!productSearch || !productInput) {
+                    return;
+                }
+
+                productSearch.setCustomValidity('');
+
+                const selectedProduct = findProductByLabel(productSearch.value.trim());
+
+                if (!selectedProduct) {
+                    productInput.value = '';
+                    updateProductPreview(null);
+                    return;
+                }
+
+                productInput.value = selectedProduct.id;
+                updateProductPreview(selectedProduct);
+            }
+
+            if (productSearch && productInput) {
+                const selectedProduct = findProductById(productInput.value);
+
+                if (selectedProduct && !productSearch.value) {
+                    productSearch.value = selectedProduct.label;
+                }
+
+                updateProductPreview(selectedProduct || findProductByLabel(productSearch.value.trim()));
+
+                productSearch.addEventListener('input', syncProductSelection);
+                productSearch.addEventListener('change', syncProductSelection);
+
+                if (borrowingForm) {
+                    borrowingForm.addEventListener('submit', function (event) {
+                        syncProductSelection();
+
+                        if (!productInput.value) {
+                            event.preventDefault();
+                            productSearch.setCustomValidity(invalidProductText);
+                            productSearch.reportValidity();
+                        }
+                    });
+                }
             }
         });
     </script>
