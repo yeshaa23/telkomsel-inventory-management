@@ -58,6 +58,7 @@
                                 type="text"
                                 name="name"
                                 id="name"
+                                required
                                 value="{{ old('name') }}"
                                 placeholder="{{ __('app.example_laptop') }}"
                             >
@@ -70,7 +71,7 @@
                         <div class="gsm-field">
                             <label for="category_id">{{ __('app.category') }}</label>
 
-                            <select name="category_id" id="category_id">
+                            <select name="category_id" id="category_id" required>
                                 <option value="">{{ __('app.choose_category') }}</option>
 
                                 @foreach($categories as $category)
@@ -107,7 +108,7 @@
                                     ->values();
                             @endphp
 
-                            <select name="location_select" id="location_select">
+                            <select name="location_select" id="location_select" required>
                                 <option value="">{{ __('app.choose_location') }}</option>
 
                                 @foreach($allLocations as $location)
@@ -158,6 +159,7 @@
                                         type="number"
                                         name="good_stock"
                                         id="good_stock"
+                                        required
                                         value="{{ old('good_stock', 0) }}"
                                         min="0"
                                         placeholder="0"
@@ -177,6 +179,7 @@
                                         type="number"
                                         name="minor_damage_stock"
                                         id="minor_damage_stock"
+                                        required
                                         value="{{ old('minor_damage_stock', 0) }}"
                                         min="0"
                                         placeholder="0"
@@ -196,6 +199,7 @@
                                         type="number"
                                         name="major_damage_stock"
                                         id="major_damage_stock"
+                                        required
                                         value="{{ old('major_damage_stock', 0) }}"
                                         min="0"
                                         placeholder="0"

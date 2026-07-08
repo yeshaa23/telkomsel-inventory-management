@@ -34,6 +34,7 @@
                                 type="text"
                                 name="borrower_name"
                                 id="borrower_name"
+                                required
                                 value="{{ old('borrower_name') }}"
                                 placeholder="Contoh: Ayesha Hana"
                             >
@@ -71,6 +72,7 @@
                                 type="date"
                                 name="borrow_date"
                                 id="borrow_date"
+                                required
                                 value="{{ old('borrow_date', date('Y-m-d')) }}"
                             >
 
@@ -99,7 +101,7 @@
                         <div class="gsm-field gsm-field-full">
                             <label for="product_id">{{ __('app.product') }}</label>
 
-                            <select name="product_id" id="product_id">
+                            <select name="product_id" id="product_id" required>
                                 <option value="">{{ __('app.choose_product') }}</option>
 
                                 @foreach($products as $product)
@@ -127,6 +129,7 @@
                                 type="number"
                                 name="quantity"
                                 id="quantity"
+                                required
                                 value="{{ old('quantity', 1) }}"
                                 min="1"
                                 placeholder="1"

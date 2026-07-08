@@ -78,7 +78,7 @@
                         <div class="gsm-field gsm-field-full">
                             <label for="return_condition">{{ __('app.return_condition') }}</label>
 
-                            <select name="return_condition" id="return_condition">
+                            <select name="return_condition" id="return_condition" required>
                                 <option value="">{{ __('app.choose_condition') }}</option>
                                 <option value="Baik" {{ old('return_condition') == 'Baik' ? 'selected' : '' }}>{{ __('app.good') }}</option>
                                 <option value="Rusak Ringan" {{ old('return_condition') == 'Rusak Ringan' ? 'selected' : '' }}>{{ __('app.minor_damage') }}</option>

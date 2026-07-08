@@ -7,6 +7,9 @@
     </x-slot>
 
     <div class="gsm-dashboard">
+        @php
+            $search = $search ?? request('search', '');
+        @endphp
         @if(session('success'))
             <div class="gsm-alert-card success">
                 <div class="gsm-alert-icon">✓</div>
@@ -30,41 +33,41 @@
         @endif
 
         <section class="gsm-panel">
-            <div class="gsm-panel-header">
-                <div>
+            <div class="gsm-panel-header flex-col xl:flex-row xl:items-start">
+                <div class="min-w-0 xl:max-w-xl">
                     <p class="gsm-eyebrow">{{ __('app.borrowing_history_label') }}</p>
                     <h3>{{ __('app.borrowing_data_title') }}</h3>
-                    <p class="text-sm text-slate-500 mt-1">
+                    <p class="text-sm text-slate-500 mt-1 max-w-2xl">
                         {{ __('app.borrowing_index_desc') }}
                     </p>
                 </div>
 
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div class="flex w-full flex-col gap-3 xl:w-auto xl:flex-row xl:items-center xl:justify-end">
                     <form
                         method="GET"
                         action="{{ route('borrowings.index') }}"
-                        class="flex w-full gap-2 sm:w-auto"
+                        class="flex w-full flex-col gap-2 sm:flex-row xl:w-auto"
                     >
                         <input
-                            type="text"
+                            type="search"
                             name="search"
                             value="{{ $search }}"
                             placeholder="{{ __('app.search_borrowings_placeholder') }}"
-                            class="min-h-10 w-full rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-100 sm:w-72"
+                            class="min-h-10 w-full rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-100 sm:min-w-72 xl:w-80"
                         >
 
-                        <button type="submit" class="gsm-button-secondary">
+                        <button type="submit" class="gsm-button-secondary whitespace-nowrap">
                             {{ __('app.search') }}
                         </button>
 
                         @if($search !== '')
-                            <a href="{{ route('borrowings.index') }}" class="gsm-button-secondary">
+                            <a href="{{ route('borrowings.index') }}" class="gsm-button-secondary whitespace-nowrap text-center">
                                 {{ __('app.reset') }}
                             </a>
                         @endif
                     </form>
 
-                    <a href="{{ route('borrowings.create') }}" class="gsm-button-primary">
+                    <a href="{{ route('borrowings.create') }}" class="gsm-button-primary whitespace-nowrap text-center">
                         {{ __('app.add_borrowing') }}
                     </a>
                 </div>
@@ -174,7 +177,9 @@
                 </table>
             </div>
 
-            <x-gsm-pagination :paginator="$borrowings" />
+            <div class="mt-6">
+                {{ $borrowings->links() }}
+            </div>
         </section>
     </div>
 </x-app-layout>
